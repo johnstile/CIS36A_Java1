@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.egit.core.GitProvider">
+<project reference="1.0,git@github.com:johnstile/CIS36A_Java1.git,master,Lab0"/>
+<project reference="1.0,git@github.com:johnstile/CIS36A_Java1.git,master,Lab02"/>
+<project reference="1.0,git@github.com:johnstile/CIS36A_Java1.git,master,Lab1"/>
+<project reference="1.0,git@github.com:johnstile/CIS36A_Java1.git,master,standards"/>
+</provider>
+</psf>
