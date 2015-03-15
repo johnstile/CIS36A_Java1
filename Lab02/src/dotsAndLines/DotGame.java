@@ -129,7 +129,7 @@ public class DotGame extends MouseListenerDrawer {
 		if (closed_state == true) {
 			if (lines_on.size() == 0 && lines_off.size() == 0) {
 				gameState = STATE_FIRST_ROUND;
-			} else if (lines_off.size() == points.size()) {
+			} else if ( isWinner() == true ) {
 				gameState = STATE_WINNER;
 			} else {
 				gameState = STATE_STILL_PLAYING;
@@ -161,7 +161,7 @@ public class DotGame extends MouseListenerDrawer {
 		} else if (gameState == STATE_STILL_PLAYING) {
 			toggleLine(p_clicked, lines_on, lines_off);
 			// RON: this seems like a strange pace to check state
-			if (lines_off.size() == points.size()) {
+			if ( isWinner() == true) {
 				gameState = STATE_WINNER;
 				repaint();
 			}
@@ -183,6 +183,9 @@ public class DotGame extends MouseListenerDrawer {
 
 	}
 
+	boolean isWinner( ){
+		return (lines_on.size() == 0 ? true: false );
+	}
 	// /////// point methods
 
 	private ArrayList<Line> getAllPossibleLines(ArrayList<Point> p ) {
