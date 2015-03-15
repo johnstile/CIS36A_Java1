@@ -9,9 +9,27 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Random;
-
-// This program accepts clicks and draws them connected by lines.
-// We'll talk about the "extends" keyword soon.
+/*
+ * The user starts the program, and a windows is drawn.
+ *   gameState = STATE_BEGIN
+ *   closed_state = false
+ * The user clicks to add points to the window, 
+ *   points are added to the ArrayList points
+ *   lines are drawn between sequential points
+ * Finally the user clicks the first point again (a green point),
+ *   closed_state = true
+ *   gameState set to STATE_FIRST_ROUND
+ *     all lines visible are added to ArrayList lines_on
+ *     determine all possible lines between points
+ *     possible lines not visible are added to ArrayList lines_off
+ * Until lines_on == 0, gameState set to STATE_STILL_PLAYING
+ *   In this state the user click on pre-existing points.
+ *     Clicking a point toggles all lines containing that point.
+ *     Toggling means swapping the line between lines_on and lines_off
+ * When lines_on == 0, gameState set to  STATE_WINNER
+ *   the game is over.
+ *   method wonGame() is called.
+ */
 @SuppressWarnings("serial")
 public class DotGame extends MouseListenerDrawer {
 	private int debug = 0;
@@ -156,7 +174,7 @@ public class DotGame extends MouseListenerDrawer {
 			}
 		} else if (gameState == STATE_STILL_PLAYING) {
 			toggleLine(p_clicked, lines_on, lines_off);
-			// RON: this seems like a strange pace to check state
+			// TODO: this seems like a strange pace to check state
 			if (isWinner() == true) {
 				gameState = STATE_WINNER;
 				repaint();
@@ -246,7 +264,7 @@ public class DotGame extends MouseListenerDrawer {
 		ArrayList<Line> toogle_on = new ArrayList<>();
 		ArrayList<Line> lines_have_point = new ArrayList<>();
 		/*
-		 * RON: CAN THESE BE IN ONE FOR LOOP
+		 * TODO: CAN THESE BE IN ONE FOR LOOP
 		 */
 		for (Line l : lines_on2) {
 			if (l.hasPoint(p_clicked2) == true) {
