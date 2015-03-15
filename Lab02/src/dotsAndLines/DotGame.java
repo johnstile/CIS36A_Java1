@@ -8,8 +8,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import java.lang.*;
+import java.util.Random;
 
 // This program accepts clicks and draws them connected by lines.
 // We'll talk about the "extends" keyword soon.
@@ -33,12 +32,12 @@ public class DotGame extends MouseListenerDrawer {
 	/*
 	 * Once the shape is closed we being the game state
 	 */
-	private static final String STATE_NONE = "None";
+	private static final String STATE_BEGIN = "Beginning";
 	private static final String STATE_FIRST_ROUND = "FirstRound";
 	private static final String STATE_WINNER = "Winner";
 	private static final String STATE_STILL_PLAYING = "StillPlaying";
 	// Initial state
-	private String gameState = STATE_NONE;
+	private String gameState = STATE_BEGIN;
 	/*
 	 * Lab2 Part A, section 3. Create 2 arrayLists of lines
 	 */
@@ -129,7 +128,7 @@ public class DotGame extends MouseListenerDrawer {
 		if (closed_state == true) {
 			if (lines_on.size() == 0 && lines_off.size() == 0) {
 				gameState = STATE_FIRST_ROUND;
-			} else if ( isWinner() == true ) {
+			} else if (isWinner() == true) {
 				gameState = STATE_WINNER;
 			} else {
 				gameState = STATE_STILL_PLAYING;
@@ -149,30 +148,42 @@ public class DotGame extends MouseListenerDrawer {
 				lines_on.add(myLine);
 			}
 			// add up all the lines that are empty
-			allPossibleLines = getAllPossibleLines (points);
-			System.out.println("allLines size: " + allPossibleLines.size() );
-			
-			for (Line l : allPossibleLines){
-				if ( lines_on.contains(l) == false){
+			allPossibleLines = getAllPossibleLines(points);
+			for (Line l : allPossibleLines) {
+				if (lines_on.contains(l) == false) {
 					lines_off.add(l);
 				}
 			}
-
 		} else if (gameState == STATE_STILL_PLAYING) {
 			toggleLine(p_clicked, lines_on, lines_off);
 			// RON: this seems like a strange pace to check state
-			if ( isWinner() == true) {
+			if (isWinner() == true) {
 				gameState = STATE_WINNER;
 				repaint();
 			}
 
 		} else if (gameState == STATE_WINNER) {
 			wonGame(g, points);
+		} else {
+			// 
+			return;
 		}
-		if ( beforeState != gameState ){
-			g.drawString( "Game State:   " + gameState, 50, 50);
-			g.drawString( "Lines Visible:" + lines_on.size(), 50, 60) ;
-			g.drawString( "Lines Hidden: " + lines_off.size(), 50, 70) ;
+		
+		// Print some meaningful info for the user
+		if (gameState == STATE_BEGIN) {
+			g.setColor(Color.black);
+			g.drawString("Game State:   " + gameState, 50, 50);
+			g.drawString("Directions: click 2 or more points, then click green dot", 50, 60);
+		} else if (gameState == STATE_FIRST_ROUND) {
+			g.setColor(Color.black);
+			g.drawString("Game State:   " + gameState, 50, 50);
+			g.drawString("Directions: Click a dot to toggle lines. Try to remove all lines.", 50, 60);
+		} else if (gameState == STATE_STILL_PLAYING ){
+		//if (beforeState != gameState) {
+			g.setColor(Color.black);
+			g.drawString("Game State:   " + gameState, 50, 50);
+			g.drawString("Lines Visible:" + lines_on.size(), 50, 60);
+			g.drawString("Lines Hidden: " + lines_off.size(), 50, 70);
 		}
 		/*
 		 * Draw all visible lines
@@ -180,18 +191,18 @@ public class DotGame extends MouseListenerDrawer {
 		for (Line j : lines_on) {
 			drawLine(g, j.getPoint1(), j.getPoint2());
 		}
-
 	}
 
-	boolean isWinner( ){
-		return (lines_on.size() == 0 ? true: false );
+	boolean isWinner() {
+		return (lines_on.size() == 0 ? true : false);
 	}
+
 	// /////// point methods
 
-	private ArrayList<Line> getAllPossibleLines(ArrayList<Point> p ) {
+	private ArrayList<Line> getAllPossibleLines(ArrayList<Point> p) {
 		ArrayList<Line> l = new ArrayList<>();
-		for ( int i=0; i< p.size(); i++){
-			for ( int j=i+1 ; j < p.size(); j++){
+		for (int i = 0; i < p.size(); i++) {
+			for (int j = i + 1; j < p.size(); j++) {
 				Line myLine = new Line(p.get(i), p.get(j));
 				l.add(myLine);
 			}
@@ -201,14 +212,14 @@ public class DotGame extends MouseListenerDrawer {
 
 	private void wonGame(Graphics g, ArrayList<Point> p) {
 		System.out.println("********WINNER******");
-		int k = 0;
+		Random rnd = new Random();
+        int k = rnd.nextInt(10);
 		for (int i = 0; i < p.size(); i++) {
 			for (int j = i + 1; j < p.size(); j++) {
 				/*
 				 * This counter used to pick a new color
 				 */
 				k++;
-
 				/*
 				 * Adjacent points are black. Other points are a rainbow. First
 				 * and last points are considered Adjacent
