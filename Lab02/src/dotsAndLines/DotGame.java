@@ -17,8 +17,8 @@ import java.lang.*;
 public class DotGame extends MouseListenerDrawer {
 	private int debug = 0;
 	/*
-     * Holds all the points
-     */
+	 * Holds all the points
+	 */
 	private final int DOT_RADIUS = 5;
 	private ArrayList<Point> points;
 	/*
@@ -30,14 +30,14 @@ public class DotGame extends MouseListenerDrawer {
 	 * am using a sentinel value for this
 	 */
 	public boolean closed_state = false;
-    /*
-     * Once the shape is closed we being the game state
-     */
+	/*
+	 * Once the shape is closed we being the game state
+	 */
 	private static final String STATE_NONE = "None";
 	private static final String STATE_FIRST_ROUND = "FirstRound";
 	private static final String STATE_WINNER = "Winner";
 	private static final String STATE_STILL_PLAYING = "StillPlaying";
-    // Initial state
+	// Initial state
 	private String gameState = STATE_NONE;
 	/*
 	 * Lab2 Part A, section 3. Create 2 arrayLists of lines
@@ -45,9 +45,10 @@ public class DotGame extends MouseListenerDrawer {
 	private ArrayList<Line> lines_on;
 	private ArrayList<Line> lines_off;
 	private Point p_clicked;
-    /* 
-     * Constructor
-     */
+
+	/*
+	 * Constructor
+	 */
 	public DotGame() {
 		points = new ArrayList<>();
 		lines_on = new ArrayList<>();
@@ -60,8 +61,8 @@ public class DotGame extends MouseListenerDrawer {
 		// where did the user click?
 		p_clicked = new Point(event.getX(), event.getY());
 		/*
-		 * If the point is near an existing point, use the
-		 * existing point, because it is hard to pick the exact same point
+		 * If the point is near an existing point, use the existing point,
+		 * because it is hard to pick the exact same point
 		 */
 		for (Point point : points) {
 			if (closeTo(point, p_clicked)) {
@@ -121,52 +122,54 @@ public class DotGame extends MouseListenerDrawer {
 				drawLine(g, p, points.get(i + 1));
 			}
 		}
-		
+
 		// Detect Stage change
 		String beforeState = gameState;
-		if ( closed_state == true){
-			if ( lines_on.size() == 0 && lines_off.size() == 0 ){
+		if (closed_state == true) {
+			if (lines_on.size() == 0 && lines_off.size() == 0) {
 				gameState = STATE_FIRST_ROUND;
-			} else if ( lines_off.size() == points.size() ){
+			} else if (lines_off.size() == points.size()) {
 				gameState = STATE_WINNER;
 			} else {
 				gameState = STATE_STILL_PLAYING;
 			}
 		}
-		
+
 		// Handle the state
-		if ( gameState == STATE_FIRST_ROUND){
+		if (gameState == STATE_FIRST_ROUND) {
 			// Create lines and add to lines_on
 			for (int i = 0; i < points.size(); i++) {
 				Line myLine;
-				if ( i < (points.size() -1) ){
-				    myLine = new Line(points.get(i), points.get(i + 1));
+				if (i < (points.size() - 1)) {
+					myLine = new Line(points.get(i), points.get(i + 1));
 				} else {
 					myLine = new Line(points.get(i), points.get(0));
 				}
 				lines_on.add(myLine);
 			}
-			
-		} else if ( gameState == STATE_STILL_PLAYING ){
-			toggleLine(p_clicked, lines_on, lines_off );
+
+		} else if (gameState == STATE_STILL_PLAYING) {
+			toggleLine(p_clicked, lines_on, lines_off);
 			// RON: this seems like a strange pace to check state
-			if ( lines_off.size() == points.size() ){
+			if (lines_off.size() == points.size()) {
 				gameState = STATE_WINNER;
 				repaint();
 			}
-		
-		} else if ( gameState == STATE_WINNER ){
-			wonGame( g, points );
+
+		} else if (gameState == STATE_WINNER) {
+			wonGame(g, points);
 		}
-		
-		// Check State
-		System.out.println("gameState:" + gameState );
+		if ( beforeState != gameState ){
+			g.drawString( "Game State:   " + gameState, 50, 50);
+			g.drawString( "Lines Visible:" + lines_on.size(), 50, 60) ;
+			g.drawString( "Lines Hidden: " + lines_off.size(), 50, 70) ;
+		}
 		/*
 		 * Draw all visible lines
 		 */
 		for (Line j : lines_on) {
 			drawLine(g, j.getPoint1(), j.getPoint2());
-		}	
+		}
 
 	}
 
@@ -175,54 +178,51 @@ public class DotGame extends MouseListenerDrawer {
 	private void wonGame(Graphics g, ArrayList<Point> p) {
 		System.out.println("********WINNER******");
 		int k = 0;
-			for ( int i = 0; i< p.size(); i++ ) {
-				for ( int j = i+1; j< p.size(); j++){
-					/*
-					 * This counter used to pick a new color
-					 */
-					k++;
+		for (int i = 0; i < p.size(); i++) {
+			for (int j = i + 1; j < p.size(); j++) {
+				/*
+				 * This counter used to pick a new color
+				 */
+				k++;
 
-					/*
-					 * Adjacent points are black.
-					 * Other points are a rainbow.
-					 * First and last points are considered Adjacent
-					 */
-					Color line_color= getRainbowColor( k );
+				/*
+				 * Adjacent points are black. Other points are a rainbow. First
+				 * and last points are considered Adjacent
+				 */
+				Color line_color = getRainbowColor(k);
 
-					/*
-					 * Draw the line
-					 */
-					//drawLine( g, points.get( i ), points.get( j ) );
-					Graphics2D g2 = ( Graphics2D ) g;
-					g2.setStroke( new BasicStroke( 3 ) );
-					g2.setColor( line_color );
-					g2.draw( new Line2D.Float( points.get( i ), points.get( j ) ) );
-					g2.setColor( Color.black );
-					g2.drawString("********WINNER: Points:" + points.size() + "*******", 50, 50) ;
-					
-				}
+				/*
+				 * Draw the line
+				 */
+				// drawLine( g, points.get( i ), points.get( j ) );
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setStroke(new BasicStroke(3));
+				g2.setColor(line_color);
+				g2.draw(new Line2D.Float(points.get(i), points.get(j)));
+				g2.setColor(Color.black);
+				g2.drawString("********WINNER: Points:" + points.size()
+						+ "*******", 50, 50);
+
+			}
 		}
-		//System.exit(0);
+		// System.exit(0);
 	}
 
-	private void toggleLine(
-			Point p_clicked2, 
-			ArrayList<Line> lines_on2,
-			ArrayList<Line> lines_off2
-	) {
+	private void toggleLine(Point p_clicked2, ArrayList<Line> lines_on2,
+			ArrayList<Line> lines_off2) {
 		ArrayList<Line> toogle_off = new ArrayList<>();
 		ArrayList<Line> toogle_on = new ArrayList<>();
 		ArrayList<Line> lines_have_point = new ArrayList<>();
 		/*
 		 * RON: CAN THESE BE IN ONE FOR LOOP
 		 */
-		for ( Line l: lines_on2 ){
-			if ( l.hasPoint(p_clicked2) == true){
+		for (Line l : lines_on2) {
+			if (l.hasPoint(p_clicked2) == true) {
 				lines_have_point.add(l);
 			}
 		}
-		for ( Line l: lines_off2 ){
-			if ( l.hasPoint(p_clicked2) == true){
+		for (Line l : lines_off2) {
+			if (l.hasPoint(p_clicked2) == true) {
 				lines_have_point.add(l);
 			}
 		}
@@ -237,14 +237,14 @@ public class DotGame extends MouseListenerDrawer {
 		}
 		// Do the toggle
 		for (Line l : toogle_off) {
-			if ( debug == 1 ){
+			if (debug == 1) {
 				System.out.println("tooogle_off");
 			}
 			lines_on.remove(l);
 			lines_off.add(l);
 		}
 		for (Line l : toogle_on) {
-			if ( debug == 1 ){
+			if (debug == 1) {
 				System.out.println("tooogle_on");
 			}
 			lines_off.remove(l);
@@ -290,20 +290,19 @@ public class DotGame extends MouseListenerDrawer {
 	public static void main(String[] args) {
 		DotGame me = new DotGame();
 	}
+
 	// /////// color methods
 
 	// returns the perspective color in the rainbow
-	private Color getRainbowColor( int k ) {
+	private Color getRainbowColor(int k) {
 		/*
-		 * REF: http://krazydad.com/tutorials/makecolors.php
-		 * Observed a color chart,
-		 * As one cycles though the rainbow,
-		 * Red, green, and blue follow the same repeating pattern, 0 to max to 0
-		 * however, each color is but out of phase by 1/3.
-		 * By using sin() to oscillate from 1 to -1,
-		 * shifting the phase such that each color is 1/3 off another
-		 * and converting all values to positive,
-		 * I can make a complete visual spectrum..
+		 * REF: http://krazydad.com/tutorials/makecolors.php Observed a color
+		 * chart, As one cycles though the rainbow, Red, green, and blue follow
+		 * the same repeating pattern, 0 to max to 0 however, each color is but
+		 * out of phase by 1/3. By using sin() to oscillate from 1 to -1,
+		 * shifting the phase such that each color is 1/3 off another and
+		 * converting all values to positive, I can make a complete visual
+		 * spectrum..
 		 */
 
 		// Generate a phase shift for each color.
@@ -312,25 +311,24 @@ public class DotGame extends MouseListenerDrawer {
 		double blue_phase = 4 * Math.PI / 3;
 
 		// Get the sign of k, shifted by the colors phase
-		double red = Math.sin( red_phase + k );
-		double green = Math.sin( green_phase + k );
-		double blue = Math.sin( blue_phase + k );
+		double red = Math.sin(red_phase + k);
+		double green = Math.sin(green_phase + k);
+		double blue = Math.sin(blue_phase + k);
 
 		// Can only use positive numbers
-		red = Math.abs( red );
-		green = Math.abs( green );
-		blue = Math.abs( blue );
-        if ( debug == 1 ){
-		    System.out.println( "k:" + k + ", red:" + red + ", green:" + green
-				+ ", blue:" + blue );
-        }
+		red = Math.abs(red);
+		green = Math.abs(green);
+		blue = Math.abs(blue);
+		if (debug == 1) {
+			System.out.println("k:" + k + ", red:" + red + ", green:" + green
+					+ ", blue:" + blue);
+		}
 		/*
-		 * Color(float r, float g, float b, float a)
-		 * Creates an sRGB color with the specified
-		 * red, green, blue, and alpha
-		 * values in the range (0.0 - 1.0).
+		 * Color(float r, float g, float b, float a) Creates an sRGB color with
+		 * the specified red, green, blue, and alpha values in the range (0.0 -
+		 * 1.0).
 		 */
-		return new Color( ( float ) red, ( float ) green, ( float ) blue );
+		return new Color((float) red, (float) green, (float) blue);
 	}
 
 }
