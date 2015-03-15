@@ -197,7 +197,8 @@ public class DotGame extends MouseListenerDrawer {
 					g2.setStroke( new BasicStroke( 3 ) );
 					g2.setColor( line_color );
 					g2.draw( new Line2D.Float( points.get( i ), points.get( j ) ) );
-					g2.drawString("********WINNER*******", 10, 10) ;
+					g2.setColor( Color.black );
+					g2.drawString("********WINNER: Points:" + points.size() + "*******", 50, 50) ;
 					
 				}
 		}
