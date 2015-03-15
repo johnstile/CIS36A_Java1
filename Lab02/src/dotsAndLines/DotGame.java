@@ -164,9 +164,6 @@ public class DotGame extends MouseListenerDrawer {
 
 		} else if (gameState == STATE_WINNER) {
 			wonGame(g, points);
-		} else {
-			// 
-			return;
 		}
 		
 		// Print some meaningful info for the user
