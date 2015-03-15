@@ -42,6 +42,7 @@ public class DotGame extends MouseListenerDrawer {
 	/*
 	 * Lab2 Part A, section 3. Create 2 arrayLists of lines
 	 */
+	ArrayList<Line> allPossibleLines;
 	private ArrayList<Line> lines_on;
 	private ArrayList<Line> lines_off;
 	private Point p_clicked;
@@ -109,7 +110,7 @@ public class DotGame extends MouseListenerDrawer {
 		// Determine quantity of points in the array
 		int totalPoints = points.size();
 
-		// Draw all points
+		// Draw all points always
 		int lastIndex = totalPoints - 1;
 		for (int i = 0; i < totalPoints; i++) {
 			Point p = points.get(i);
@@ -147,6 +148,15 @@ public class DotGame extends MouseListenerDrawer {
 				}
 				lines_on.add(myLine);
 			}
+			// add up all the lines that are empty
+			allPossibleLines = getAllPossibleLines (points);
+			System.out.println("allLines size: " + allPossibleLines.size() );
+			
+			for (Line l : allPossibleLines){
+				if ( lines_on.contains(l) == false){
+					lines_off.add(l);
+				}
+			}
 
 		} else if (gameState == STATE_STILL_PLAYING) {
 			toggleLine(p_clicked, lines_on, lines_off);
@@ -174,6 +184,17 @@ public class DotGame extends MouseListenerDrawer {
 	}
 
 	// /////// point methods
+
+	private ArrayList<Line> getAllPossibleLines(ArrayList<Point> p ) {
+		ArrayList<Line> l = new ArrayList<>();
+		for ( int i=0; i< p.size(); i++){
+			for ( int j=i+1 ; j < p.size(); j++){
+				Line myLine = new Line(p.get(i), p.get(j));
+				l.add(myLine);
+			}
+		}
+		return l;
+	}
 
 	private void wonGame(Graphics g, ArrayList<Point> p) {
 		System.out.println("********WINNER******");

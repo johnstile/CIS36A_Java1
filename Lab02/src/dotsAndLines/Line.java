@@ -28,34 +28,18 @@ public class Line {
 		return ( "point1:" + getPoint1() + ",point2:" + getPoint2() );
 	}
 
-	public boolean equals( Line l ) {
-		// Debugging
-		if ( point1.equals( l.getPoint1() ) ) {
-			System.out.println( "Match Point1" );
-		}
-		if ( point2.equals( l.getPoint2() ) ) {
-			System.out.println( "Match Point2" );
-		}
-		// End Debugging
-		boolean foundIt = false;
-		if (  
-		    point1.equals( l.getPoint1() )
-			&&  point2.equals( l.getPoint2())  
-		){
-			System.out.println( "SETTING TO TRUE" );
-			foundIt = true;
-		}
-		return foundIt;
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Line other = (Line) obj;
+		return hasPoint(other.getPoint1()) && hasPoint(other.getPoint2());
 	}
 
-	public boolean hasPoint( Point p ) {
-		boolean found = false;
-		if ( p.equals( point1 ) ){
-			found = true;
-		}
-		if ( p.equals( point2)  ) {
-			found = true;
-		}
-		return found;
+	public boolean hasPoint(Point p) {
+		return p.equals(point1) || p.equals(point2);
 	}
 }
