@@ -38,5 +38,4 @@ public class TestMyClass {
 		int[] b = {};
 		my_array.print_array( my_array.zip( a, b ) );
 	}
-
 }

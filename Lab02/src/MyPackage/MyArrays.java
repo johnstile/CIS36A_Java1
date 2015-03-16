@@ -4,7 +4,7 @@ package MyPackage;
  * By:  John Stile 
  * Write a method zip that takes 2 int arrays and returns a signle int array
  * with the two arguments zipped together. on or both arguments may be null; 
- * if both are null retutnr a zero-length array.
+ * if both are null return a zero-length array.
  */
 public class MyArrays {
 	
