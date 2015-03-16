@@ -1,7 +1,7 @@
 package prisoner;
 
 public class Unforgiving extends Player {
-	boolean yes = true; // switch to false if opponent competes
+	public boolean yes = true; // switch to false if opponent competes
 
 	public Unforgiving(String name) {
 		super(name);
@@ -13,4 +13,12 @@ public class Unforgiving extends Player {
 	public boolean cooperate() {
 		return yes;
 	};
+	// called by the simulation framework after each turn is completed
+	// parameter reflects oppenents choice in that turn.
+	public void opponentChoice(boolean opponentCooperated) {
+		// switch to false if opponent competes
+		if ( opponentCooperated == false ){
+			yes = false;
+		}
+	}	
 }

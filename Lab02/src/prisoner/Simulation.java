@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 public class Simulation {
 
-	final static boolean PROVIDE_INFORMATION_PER_TURN = false;
-
+	final static boolean PROVIDE_INFORMATION_PER_TURN = true;
+    
 	// ///////////// constructors
 
 	public Simulation(Player p1, Player p2) {
@@ -56,6 +56,44 @@ public class Simulation {
 	}
 
 	public static void main(String[] args) {
+
+		//Simulation s0 = new Simulation(new Player("p1"), new Player("p2"), 20);
+		
+		/*
+		 * Test every permutation and combination of strategines 
+		 */
+		ArrayList<Player> players1 = new ArrayList<Player>();
+		players1.add(new Player("Player1"));
+		players1.add(new Competitor("Competitor1"));
+		players1.add(new RandomChooser("RandomChooser1"));
+		players1.add(new Unforgiving("Unforgiving1"));
+		players1.add(new TitForTat("TitForTat1"));
+		
+		ArrayList<Player> players2 = new ArrayList<Player>();
+		players2.add(new Player("Player2"));
+		players2.add(new Competitor("Competitor2"));
+		players2.add(new RandomChooser("RandomChooser2"));
+		players2.add(new Unforgiving("Unforgiving2"));
+		players2.add(new TitForTat("TitForTat2"));
+
+		System.out.println(
+			"\nStrategy Variations:\n"
+		    + "\tPlayer: aways cooperae\n"
+			+ "\tCompetitor: aways competitor\n"
+		    + "\tRandomChooser: always random\n"
+			+ "\tUnforgiving: cooperae until opponent competes, then competes\n"
+		    + "\tTitForTat: cooperae, then always do what the opponent did last round\n"
+		);
+		System.out.println(players1.size());
+		System.out.println("Start loop");
+		for (Player p1 : players1) {
+			for (Player p2 : players2) {
+				System.out.println("------------------------------------------");
+				System.out.println("Test: " + p1.toString() + " vs. " + p2.toString());
+				Simulation s = new Simulation(p1, p2, 20);
+			}
+		}
+		System.out.println("End loop");
 		/*
 		 * Which kind of player wins against the most other kinds of players?
 		 * 
@@ -65,29 +103,5 @@ public class Simulation {
 		 * better, in sothan any of the 5 players you’ve defined. Just describe
 		 * the player, don’t code it!
 		 */
-
-		Simulation s0 = new Simulation(new Player("p1"), new Player("p2"), 20);
-
-		ArrayList<Player> players1 = new ArrayList<Player>();
-		players1.add(new Player("Player1"));
-		players1.add(new Competitor("Competitor1"));
-		players1.add(new RandomChooser("RandomChooser1"));
-		players1.add(new Unforgiving("Unforgiving1"));
-		players1.add(new TitForTat("TitForTat1"));
-
-		ArrayList<Player> players2 = new ArrayList<Player>();
-		players1.add(new Player("Player2"));
-		players1.add(new Competitor("Competitor2"));
-		players1.add(new RandomChooser("RandomChooser2"));
-		players1.add(new Unforgiving("Unforgiving2"));
-		players1.add(new TitForTat("TitForTat2"));
-
-		System.out.println("Start loop");
-		for (Player p1 : players1) {
-			for (Player p2 : players2) {
-				Simulation s = new Simulation(p1, p2, 20);
-			}
-		}
-		System.out.println("End loop");
 	}
 }

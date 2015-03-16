@@ -14,6 +14,7 @@ public class RandomChooser extends Player {
 	// player should cooperate, or false otherwise.
 	public boolean cooperate() {
 		// RandomChooser is unpredictable
-		return (rnd.nextInt(1) < 0) ? true : false;
+		int random = rnd.nextInt(2); // between 0 and 1
+		return ( random == 0) ? true : false;
 	};
 }

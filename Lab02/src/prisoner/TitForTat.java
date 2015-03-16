@@ -14,4 +14,10 @@ public class TitForTat extends Player {
 		// does what ever the compeditor does on the previous turn
 		return yes;
 	};
+	// called by the simulation framework after each turn is completed
+	// parameter reflects oppenents choice in that turn.
+	public void opponentChoice(boolean opponentCooperated) {
+		// switch to false if opponent competes
+		yes = opponentCooperated;
+	}
 }
