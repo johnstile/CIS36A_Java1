@@ -41,4 +41,8 @@ public class Player {
 	public void opponentChoice(boolean opponentCooperated) {
 		// default implementation does nothing with this information
 	}
+	
+	public void reset(){
+		myScore = 0;
+	}
 }

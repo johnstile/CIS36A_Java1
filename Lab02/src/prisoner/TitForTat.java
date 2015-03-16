@@ -20,4 +20,8 @@ public class TitForTat extends Player {
 		// switch to false if opponent competes
 		yes = opponentCooperated;
 	}
+    public void reset(){
+		super.reset();
+		yes = true;
+	}
 }

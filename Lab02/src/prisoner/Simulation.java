@@ -91,6 +91,8 @@ public class Simulation {
 				System.out.println("------------------------------------------");
 				System.out.println("Test: " + p1.toString() + " vs. " + p2.toString());
 				Simulation s = new Simulation(p1, p2, 20);
+				p1.reset();
+				p2.reset();
 			}
 		}
 		System.out.println("End loop");

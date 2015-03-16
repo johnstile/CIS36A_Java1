@@ -16,9 +16,13 @@ public class Unforgiving extends Player {
 	// called by the simulation framework after each turn is completed
 	// parameter reflects oppenents choice in that turn.
 	public void opponentChoice(boolean opponentCooperated) {
-		// switch to false if opponent competes
-		if ( opponentCooperated == false ){
+		// switch to false if opponent ever chose to compete
+		if ( yes == false || opponentCooperated == false  ){
 			yes = false;
 		}
-	}	
+	}
+	public void reset(){
+		super.reset();
+		yes = true;
+	}
 }
