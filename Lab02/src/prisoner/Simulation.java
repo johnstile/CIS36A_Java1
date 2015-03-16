@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Simulation {
 
-	final static boolean PROVIDE_INFORMATION_PER_TURN = true;
+	final static boolean PROVIDE_INFORMATION_PER_TURN = false;
     
 	// ///////////// constructors
 
@@ -97,13 +97,23 @@ public class Simulation {
 		}
 		System.out.println("End loop");
 		/*
-		 * Which kind of player wins against the most other kinds of players?
+		 * Q1: Which kind of player wins against the most other kinds of players?
+		 * A1: Player
 		 * 
-		 * Which two kinds of players score the highest together? Which kind of
-		 * player scores the highest against the range of other player types?
-		 * Describe a new kind of player (that could be coded) that would play
+		 * Q2: Which two kinds of players score the highest together?
+         * A2: Player+Player, Player+Unforgiving, 
+         *     Unforgiving+Unforgiving, TitForTat+Player,
+         *     Player+Unforgiving, TitForTat+TitForTat
+         * 
+         * Q3: Which kind of player scores the highest against the range of other player types?
+         * A3: Player scores 100 vs Competitor
+         * 
+		 * Q4: Describe a new kind of player (that could be coded) that would play
 		 * better, in sothan any of the 5 players you’ve defined. Just describe
 		 * the player, don’t code it!
+		 * A4: Seems we did not cover Forgiving and temporary retaliation.
+		 *     If the opponent 	does not cooperate maybe we could retaiate for a move or two
+		 *     and then go back to coopration
 		 */
 	}
 }
