@@ -18,7 +18,8 @@ public class DotsAndLines extends MouseListenerDrawer {
 
     
     // This gets called whenever the user presses their mouse button in the window
-    public void mousePressed(MouseEvent event) {
+    @Override
+	public void mousePressed(MouseEvent event) {
         // where did the user click?
         Point p_clicked = new Point(event.getX(), event.getY());
 
@@ -34,7 +35,8 @@ public class DotsAndLines extends MouseListenerDrawer {
 
     // This gets called whenever Java needs to draw to the window.  
     //   Basic method: first erase the window, then redraw it.  Simple!
-    public void paintComponent(Graphics g) {
+    @Override
+	public void paintComponent(Graphics g) {
         // erase the window
         erase(g);
 

@@ -12,6 +12,7 @@ public class RandomChooser extends Player {
 
 	// provides the players choice for this round, returning true if the
 	// player should cooperate, or false otherwise.
+	@Override
 	public boolean cooperate() {
 		// RandomChooser is unpredictable
 		int random = rnd.nextInt(2); // between 0 and 1

@@ -3,7 +3,6 @@ package dotsAndLines;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JFrame;
@@ -34,18 +33,23 @@ public class MouseListenerDrawer extends JPanel implements MouseListener{
     
     
     // Mouse Listener Stuff
-    public void mouseClicked (MouseEvent event) {
+    @Override
+	public void mouseClicked (MouseEvent event) {
     }
     
-    public void mouseReleased (MouseEvent event) {
+    @Override
+	public void mouseReleased (MouseEvent event) {
     }
     
-    public void mousePressed (MouseEvent event) {
+    @Override
+	public void mousePressed (MouseEvent event) {
     }
     
-    public void mouseEntered (MouseEvent event) {
+    @Override
+	public void mouseEntered (MouseEvent event) {
     }
     
-    public void mouseExited (MouseEvent event) {
+    @Override
+	public void mouseExited (MouseEvent event) {
     }
 }

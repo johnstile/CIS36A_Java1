@@ -44,6 +44,7 @@ public class ClosedPattern extends MouseListenerDrawer {
 
 	// This gets called whenever the user presses their mouse button in the
 	// window
+	@Override
 	public void mousePressed( MouseEvent event ) {
 
 		System.out.println( "Enter: mousePressed()" );
@@ -84,6 +85,7 @@ public class ClosedPattern extends MouseListenerDrawer {
 
 	// This gets called whenever Java needs to draw to the window.
 	// Basic method: first erase the window, then redraw it. Simple!
+	@Override
 	public void paintComponent( Graphics g ) {
 
 		System.out.println( "Enter: paintComponent()" );

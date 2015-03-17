@@ -10,17 +10,20 @@ public class Unforgiving extends Player {
 
 	// provides the players choice for this round, returning true if the
 	// player should cooperate, or false otherwise.
+	@Override
 	public boolean cooperate() {
 		return yes;
 	};
 	// called by the simulation framework after each turn is completed
 	// parameter reflects oppenents choice in that turn.
+	@Override
 	public void opponentChoice(boolean opponentCooperated) {
 		// switch to false if opponent ever chose to compete
 		if ( yes == false || opponentCooperated == false  ){
 			yes = false;
 		}
 	}
+	@Override
 	public void reset(){
 		super.reset();
 		yes = true;

@@ -9,6 +9,7 @@ public class Competitor extends Player {
 
 	// provides the players choice for this round, returning true if the
 	// player should cooperate, or false otherwise.
+	@Override
 	public boolean cooperate() {
 		// Competitor always competes
 		return false;

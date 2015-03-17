@@ -6,6 +6,7 @@ public class Oger extends Alien {
 		super(health, name);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
 	public int getDammage(){
 		return inflictsDammage;
 	}

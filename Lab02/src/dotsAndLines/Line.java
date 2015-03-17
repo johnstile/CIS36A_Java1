@@ -1,7 +1,6 @@
 package dotsAndLines;
 
 import java.awt.*; // gets Point
-import java.util.ArrayList;
 
 public class Line {
 	public static final Point	getPoint2	= null;
@@ -24,10 +23,12 @@ public class Line {
 		return point2;
 	}
 
+	@Override
 	public String toString() {
 		return ( "point1:" + getPoint1() + ",point2:" + getPoint2() );
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

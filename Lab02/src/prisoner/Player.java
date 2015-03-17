@@ -14,6 +14,7 @@ public class Player {
 	}
 
 	// returns the name and the class in parentheses
+	@Override
 	public String toString() {
 		return (myName);
 	}

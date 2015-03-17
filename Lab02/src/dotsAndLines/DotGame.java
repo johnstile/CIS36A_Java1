@@ -75,6 +75,7 @@ public class DotGame extends MouseListenerDrawer {
 
 	// This gets called whenever the user presses their mouse button in the
 	// window
+	@Override
 	public void mousePressed(MouseEvent event) {
 		// where did the user click?
 		p_clicked = new Point(event.getX(), event.getY());
@@ -120,6 +121,7 @@ public class DotGame extends MouseListenerDrawer {
 
 	// This gets called whenever Java needs to draw to the window.
 	// Basic method: first erase the window, then redraw it. Simple!
+	@Override
 	public void paintComponent(Graphics g) {
 		// erase the window
 		erase(g);
