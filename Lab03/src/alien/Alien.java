@@ -1,8 +1,9 @@
 package alien;
 /*
- * Directions: lab 2 (part B).pdf
+ * Directions: lab 3 (part 1).pdf 
+ * Make this class abstract
  */
-public class Alien {
+public abstract  class Alien {
     private int health; // 0=dead, 100=full strength
     private String name;
     private int inflictsDammage = 0;
@@ -20,9 +21,9 @@ public class Alien {
 	public int getHealth(){
 		return health;
 	}
-	public int getDammage(){
-		return 0;
-	}
+	// Made method abstract
+	public abstract  int getDammage();
+	
 	public void setHealth(int h){
 		if ( h <= 0 ){
 		    health = 0;
