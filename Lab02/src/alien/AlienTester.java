@@ -21,9 +21,9 @@ public class AlienTester {
 		AlienPack ap_snake2 = new AlienPack2();
 		
 		// Construct a 6 pack of Snake aliens
-		int pack = 6;
-		for (int i = 0; i <= pack; i++){
-			Alien a = new Alien( Alien.SNAKE_ALIEN, health, "Snake-" + i );
+		int pack = 2;
+		for (int i = 0; i < pack; i++){
+			Snake a = new Snake( Alien.SNAKE_ALIEN, health, "Snake-" + i );
 			ap_snake.addAlien( a );
 		}
 	
@@ -37,6 +37,7 @@ public class AlienTester {
 	        );
 		}
 		// TODO: What are some tests I should do
+		
 		// TODO: How do I show is-a relationship between AlienPack and AlienPack2?
 		
 	}

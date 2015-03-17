@@ -35,11 +35,11 @@ public class AlienPack {
         int damage = 0;
         for (Alien a : aliens) {
             if ( a.getType() == Alien.SNAKE_ALIEN ) {
-                damage += a.getDammage(); // Snake does 10 damage
+                damage += ((Snake) a).getDammage(); // Snake does 10 damage
             } else if ( a.getType() == Alien.OGRE_ALIEN ) {
-                damage += 6; // Ogre does 6 damage
+                damage += ((Oger) a).getDammage(); // Ogre does 6 damage
             } else if ( a.getType() == Alien.MARSHMALLOW_MAN_ALIEN) {
-                damage += 1; // Marshmallow Man does 1 damage
+                damage += ((MarshmellowMan) a).getDammage(); // Marshmallow Man does 1 damage
             }
         }
         return damage;

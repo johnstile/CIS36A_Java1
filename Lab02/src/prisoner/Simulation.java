@@ -112,8 +112,8 @@ public class Simulation {
 		 * better, in sothan any of the 5 players you’ve defined. Just describe
 		 * the player, don’t code it!
 		 * A4: Seems we did not cover Forgiving and temporary retaliation.
-		 *     If the opponent 	does not cooperate maybe we could retaiate for a move or two
-		 *     and then go back to coopration
+		 *     If the opponent does not cooperate maybe we could compete
+		 *     for one or more turns, and then go back to cooperation
 		 */
 	}
 }
