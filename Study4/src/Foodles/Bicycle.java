@@ -1,0 +1,50 @@
+package Foodles;
+public class Bicycle {
+    
+    // the Bicycle class has
+    // three fields
+    public int cadence;
+    public int gear;
+    public int speed;
+        
+    // the Bicycle class has
+    // one constructor
+    public Bicycle(int startCadence, int startSpeed, int startGear) {
+        gear = startGear;
+        cadence = startCadence;
+        speed = startSpeed;
+    }
+        
+    // the Bicycle class has
+    // four methods
+    public void setCadence(int newValue) {
+        cadence = newValue;
+    }
+        
+    public void setGear(int newValue) {
+        gear = newValue;
+    }
+        
+    public void applyBrake(int decrement) {
+        speed -= decrement;
+    }
+        
+    public void speedUp(int increment) {
+        speed += increment;
+    }
+    
+    public static void main(String[] argv)
+    {
+    	Bicycle myBike = new Bicycle(30, 0, 8);
+    	/* If your class has no explicit superclass, 
+    	 * then it has an implicit superclass of Object, 
+    	 * which does have a no-argument constructor.
+    	 */
+    	Bicycle myBike2 = new Bicycle();
+    	
+    }
+    	
+    	
+    }
+        
+}
