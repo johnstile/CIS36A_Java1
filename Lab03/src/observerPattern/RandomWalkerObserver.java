@@ -10,7 +10,12 @@ public class RandomWalkerObserver implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		steps++; 
 		spaces +=  (int)arg1 ;
-		String direction = ( spaces == 0 ) ? "where they started": (spaces > 0 ) ?  (spaces + " spaces to the right" ) : (Math.abs(spaces) + " spaces to the left"); 
+		//  use ternary operator to handle tri-state left, right, and center
+		String direction = ( spaces == 0 ) 
+				? "where they started"
+				: (spaces > 0 ) 
+						?  (spaces + " spaces to the right" ) 
+						: (Math.abs(spaces) + " spaces to the left"); 
 		
 		// Every multiple of 10 spaces print a message
 		if ( (spaces%10) == 0 ){
