@@ -144,7 +144,24 @@ public class RGBImage {
     // half the information in the picture, and won't see any effect if the image
     // is already mirrored.
     public void mirrorHorizontal() {
+        int width = red.length;
+        int height = red[0].length;
+
+        // Protection from division by zero
+        if (width == 0){
+        	return;
+        }
         
+        // Strategy:  Copy from middle to first into middle to last
+        for (int h=0;h<height;h++) {
+        	for ( int w=width/2; w < width; w++) {
+        			int m = width - w;
+	                red[w][h] = red[m][h] ;
+	                green[w][h] = green[m][h];
+	                blue[w][h] = blue[m][h];
+        	}
+        }
+    	refresh();
     }
     
     
@@ -155,7 +172,7 @@ public class RGBImage {
      * in an image therefore is to scale the values so they fill this range. 
      */
     public void contrastStretch() {
-        
+    	refresh();
     }
     
     
@@ -186,6 +203,6 @@ public class RGBImage {
     // information in those pixels. If the picture has a width or height
     // less than 5 pixels, this method must not crash!
     public void addBorder() {
-        
+    	refresh();
     }
 }
