@@ -24,8 +24,9 @@ public class TestRGBImage {
         //seagull.flipVertical();
         //seagull.makeGreyscale();
         //seagull.threshHolding(130);
-        seagull.mirrorHorizontal();
+        //seagull.mirrorHorizontal();
         //seagull.contrastStretch();
         //seagull.addBorder();
+        seagull.smoothingFilter();
     }
 }
