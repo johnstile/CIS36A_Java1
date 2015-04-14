@@ -1,5 +1,7 @@
 package imageProc;
 
+import java.util.Scanner; // for debugging, get program to pause
+
 public class RGBImage {
 
 	// folder to look for image files
@@ -200,12 +202,12 @@ public class RGBImage {
 	public void smoothingFilter() {
 		// base filter
 		double smooth = ((double) 1.0) / 9;
-		double[][] myFilter = { { smooth, smooth, smooth },
-				{ smooth, smooth, smooth }, { smooth, smooth, smooth } };
+		double[][] myFilter = { 
+				{ smooth, smooth, smooth },
+				{ smooth, smooth, smooth }, 
+				{ smooth, smooth, smooth } };
 		// apply filter to image
 		spatialFilter(myFilter);
-		// redraw image
-		refresh();
 	}
 
 	public void sharpeningFilter() {
@@ -217,9 +219,11 @@ public class RGBImage {
 		refresh();
 	}
 
-	// this takes a Filter ( a 2D array of doubles )
-	// Apply the filter to the image
+	// this takes a Filter ( a 2D array of doubles, the sum of each element = 1
+	// )
+	// Apply the filter to each pixel
 	// Iterate over the whole image
+	//
 	//
 	public void spatialFilter(double[][] Filter) {
 		System.out.println("apply filter");
@@ -227,99 +231,112 @@ public class RGBImage {
 		int width = red.length;
 		int height = red[0].length;
 		int fSize = Filter.length;
-
+		int fMiddle = fSize / 2;
 		/*
 		 * Iterate over every pixle in the image
 		 */
 		for (int h = 0; h < height; h++) {
+			/*
+			 * When at the edges of an image, there won't be pixels to
+			 * correspond to each cell in the filter. Two options: don't
+			 * apply the filter to a pixel unless all cells correspond
+			 * to a neighbor pixel, or apply the filter to only the
+			 * relevant cells.
+			 */
+			if (  (h - fMiddle) < 0
+					|| (h + fMiddle) >= height 
+				){ continue; }
+			
 			for (int w = 0; w < width; w++) {
+				if ( h == 1 && w == 571){
+					System.out.println("Going out of bouns)");
+				}
+
 				/*
-				 * Print the pixle we are acting on
+				 * When at the edges of an image, there won't be pixels to
+				 * correspond to each cell in the filter. Two options: don't
+				 * apply the filter to a pixel unless all cells correspond
+				 * to a neighbor pixel, or apply the filter to only the
+				 * relevant cells.
 				 */
-				System.out.println("Pixel[" + h + "][" + w + "]");
+				if (  (w - fMiddle) < 0
+						|| (w + fMiddle) >=  width
+				){ 
+					
+					continue; 
+				}
 				/*
-				 * Determine middle
+				 *  Print debug stuff (Supper slow!)
 				 */
-				int fMiddle = fSize / 2;
-				/*
-				 * Iterate over the filter
-				 */
-				for (int fh = -fMiddle; fh <= fMiddle; fh++) {
-					// skip edges, where filter would go beyond image
-					if (((h + fh) < 0) || ((h + fh) > height)) {
-						continue;
-					}
-					//----------------------------------------------------------------
-					// PRINT THE FILTER
-					for (int fw = -fMiddle; fw <= fMiddle; fw++) {
-						// skip edges, where filter would go beyond image
-						if (((w + fw) < 0) || ((w + fw) > width)) {
-							continue;
-						}
-						System.out.print("f[" + fh + "][" + fw + "] ");
-					} // end PRINT THE FILTER
-					System.out.print("\t");
-					//----------------------------------------------------------------
-					// PRINT PIXLES AROUND POINT
-					for (int fw = -fMiddle; fw <= fMiddle; fw++) {
-						// skip edges, where filter would go beyond image
-						if (((w + fw) < 0) || ((w + fw) > width)) {
-							continue;
-						}
-						// lets see the matrix
-						System.out.print("p[" + (h + fh) + "][" + (w + fw) + "] ");
-					} // end PRINT PIXLES AROUND POINT
-					System.out.print("\t");
-					//----------------------------------------------------------------
-					// APPLY THE FILTER 
-					double sumGreen = 0.0;
-					double sumRed = 0.0;
-				    double sumBlue = 0.0;
-					for (int fw = -fMiddle; fw <= fMiddle; fw++) {
-						sumRed += (double)red[(h + fh)][(w + fw)] * Filter[fh][fw];
-					    sumGreen += (double)green[(h + fh)][(w + fw)] * Filter[fh][fw];
-					    sumBlue  += (double)blue[(h + fh)][(w + fw)] * Filter[fh][fw];
-					}
-					if (sumRed < 0){
-						red[h][w] = 0; 
-					} else if (sumRed > 255 ){
-						red[h][w] = 255; 
-					} else {
-						red[h][w] = (int)sumRed;
-					}
-					if (sumGreen < 0){
-						red[h][w] = 0; 
-					} else if (sumGreen > 255 ){
-						red[h][w] = 255; 
-					} else {
-						red[h][w] = (int)sumGreen;
-					}
-					if (sumBlue < 0){
-						red[h][w] = 0; 
-					} else if (sumBlue > 255 ){
-						red[h][w] = 255; 
-					} else {
-						red[h][w] = (int)sumBlue;
-					}	
-					// end APPLY THE FILTER
-					//----------------------------------------------------------------
-					// PRINT PIXLES AROUND POINT after applying the filter
-					for (int fw = -fMiddle; fw <= fMiddle; fw++) {
-						// skip edges, where filter would go beyond image
-						if (((w + fw) < 0) || ((w + fw) > width)) {
-							continue;
-						}
-						// lets see the matrix
-						System.out.print("p[" + (h + fh) + "][" + (w + fw) + "] ");
-					} // end PRINT PIXLES AROUND POINT
-					System.out.print("\t");					 
-					//----------------------------------------------------------------
-					// NEW LINE AFTER PRINTING ARRAYS
-					System.out.println();
-				} // end filter height
-					// NEW LINE AFTER APPLY FILTER
-				System.out.println();
+				//Debug( fMiddle,  w, h );
+               /*
+                * Apply filter to given pixel
+                */
+			    applyFilterToPixle( Filter, w, h  );
+			    				
+			} // End width
+			
+		} // End height
+		
+		// redraw image after each line of processing
+		refresh();
+	}
+	public void applyFilterToPixle( double[][] filter, int w, int h ){
+		// This holds the result of the filter
+		double sumRed=0;
+		double sumGreen=0;
+		double sumBlue=0;
+		int fMiddle = (filter.length/2);
+		/*
+		 * Iterate over the filter
+		 */
+		for (int fh = -fMiddle; fh <= fMiddle; fh++) {
+			for (int fw = -fMiddle; fw <= fMiddle; fw++) {
+				sumRed += (red[w + fw][h + fh] * filter[fMiddle + fw][fMiddle + fh]);
+				sumGreen += (green[w + fw][h + fh] * filter[fMiddle + fw][fMiddle + fh]);
+				sumBlue += (blue[w + fw][h + fh] * filter[fMiddle + fw][fMiddle + fh]);
 			}
 		}
+		/*
+		 * Set color of pixle
+		 */
+		red[w][h]=constrainValue(sumRed);
+		green[w][h]=constrainValue(sumGreen);
+		blue[w][h]=constrainValue(sumBlue);
+	}
+	
+	public void Debug(int fMiddle, int w, int h ){
+		/*
+		 * Print the pixle we are acting on
+		 */
+		System.out.println("Pixel[" + w + "][" + h + "]");
+		/*
+		 * Print the filter next to the point
+		 */
+		for (int fh = -fMiddle; fh <= fMiddle; fh++) {
+			// ----------------------------------------------------------------
+			// DEBUG: PRINT THE FILTER
+			for (int fw = -fMiddle; fw <= fMiddle; fw++) {
+				System.out.print("f[" + fw + "][" + fh + "] ");
+			} // end DEBUG: PRINT THE FILTER
+			System.out.print("\t");
+			// ----------------------------------------------------------------
+			// DEBUG: PRINT PIXLES AROUND POINT
+			for (int fw = -fMiddle; fw <= fMiddle; fw++) {
+				// lets see the matrix
+				System.out.print("p[" + (w + fw) + "][" + (h + fh) + "] ");
+			} // end DEBUG: PRINT PIXLES AROUND POINT
+			System.out.print("\n");
+		}
+	}
+	// Constrain the value of x between 0 and 255
+	public int constrainValue( double x){
+		return (int)( 
+				(x < 0 )
+				? 0
+				: ( x > 255)
+				    ? 255
+				    : x
+		);
 	}
 }
