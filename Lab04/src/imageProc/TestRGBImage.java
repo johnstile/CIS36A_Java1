@@ -13,7 +13,7 @@ public class TestRGBImage {
 
     public static void main(String[] args) {
 
-        testOnSeagull();
+        //testOnSeagull();
         
     }
     
@@ -21,12 +21,16 @@ public class TestRGBImage {
     
     public static void testOnSeagull() {
         RGBImage seagull = new RGBImage("seagull.jpg");
-        //seagull.flipVertical();
-        //seagull.makeGreyscale();
-        //seagull.threshHolding(130);
-        //seagull.mirrorHorizontal();
-        //seagull.contrastStretch();
-        //seagull.addBorder();
+        seagull.flipVertical();
+        seagull.makeGreyscale();
+        seagull.threshHolding(130);
+        seagull.mirrorHorizontal();
+        seagull.contrastStretch();
+        seagull.addBorder();
         seagull.smoothingFilter();
+        seagull.sharpeningFilter();
+        seagull.detectVerticalEdge();
+        seagull.detectHorizontalEdge(); 
+        
     }
 }

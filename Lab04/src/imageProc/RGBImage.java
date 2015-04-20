@@ -208,16 +208,43 @@ public class RGBImage {
 				{ smooth, smooth, smooth } };
 		// apply filter to image
 		spatialFilter(myFilter);
+		// redraw image
+		refresh();
 	}
-
 	public void sharpeningFilter() {
 		// base filter
-		double[][] myFilter = { { 0, -1, 0 }, { -1, 5, -1 }, { 0, -1, 0 } };
+		double[][] myFilter = { 
+				{ 0, -1, 0 }, 
+				{ -1, 5, -1 }, 
+				{ 0, -1, 0 } };
 		// apply filter to image
 		spatialFilter(myFilter);
 		// redraw image
 		refresh();
 	}
+	public void detectVerticalEdge(){
+		// base filter
+		double[][] myFilter = { 
+				{ -1, 0, 1 }, 
+				{ -1, 0, 1 }, 
+				{ -1, 0, 1 } };
+		// apply filter to image
+		spatialFilter(myFilter);
+		// redraw image
+		refresh();
+	}
+	public void detectHorizontalEdge(){
+		// base filter
+		double[][] myFilter = { 
+				{ -1, -1, -1 }, 
+				{  0,  0,  0 }, 
+				{  1,  1,  1 } };
+		// apply filter to image
+		spatialFilter(myFilter);
+		// redraw image
+		refresh();
+	}
+
 
 	// this takes a Filter ( a 2D array of doubles, the sum of each element = 1
 	// )
@@ -248,10 +275,6 @@ public class RGBImage {
 				){ continue; }
 			
 			for (int w = 0; w < width; w++) {
-				if ( h == 1 && w == 571){
-					System.out.println("Going out of bouns)");
-				}
-
 				/*
 				 * When at the edges of an image, there won't be pixels to
 				 * correspond to each cell in the filter. Two options: don't
@@ -262,13 +285,12 @@ public class RGBImage {
 				if (  (w - fMiddle) < 0
 						|| (w + fMiddle) >=  width
 				){ 
-					
 					continue; 
 				}
 				/*
 				 *  Print debug stuff (Supper slow!)
 				 */
-				//Debug( fMiddle,  w, h );
+				printDebug( fMiddle,  w, h );
                /*
                 * Apply filter to given pixel
                 */
@@ -278,9 +300,24 @@ public class RGBImage {
 			
 		} // End height
 		
-		// redraw image after each line of processing
-		refresh();
 	}
+    public boolean validFilterPixel(int x, int min, int max){
+		/*
+		 * When at the edges of an image, there won't be pixels to
+		 * correspond to each cell in the filter. Two options: don't
+		 * apply the filter to a pixel unless all cells correspond
+		 * to a neighbor pixel, or apply the filter to only the
+		 * relevant cells.
+		 */
+        int middle = max/2;
+        /*
+         * stepping behind and ahead of x must be a valid image pixel
+         */
+		return (  (x - middle) >= min &&  (x + middle) < max )? true:false;
+    }
+    /*
+     * Takes 2d filter and point in the image, and applies the filter
+     */
 	public void applyFilterToPixle( double[][] filter, int w, int h ){
 		// This holds the result of the filter
 		double sumRed=0;
@@ -300,12 +337,12 @@ public class RGBImage {
 		/*
 		 * Set color of pixle
 		 */
-		red[w][h]=constrainValue(sumRed);
-		green[w][h]=constrainValue(sumGreen);
-		blue[w][h]=constrainValue(sumBlue);
+		red[w][h]=0; //constrainValue(sumRed);
+		green[w][h]=0; //constrainValue(sumGreen);
+		blue[w][h]=0; //constrainValue(sumBlue);
 	}
 	
-	public void Debug(int fMiddle, int w, int h ){
+	public void printDebug(int fMiddle, int w, int h ){
 		/*
 		 * Print the pixle we are acting on
 		 */

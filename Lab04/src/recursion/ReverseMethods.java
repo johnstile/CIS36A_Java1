@@ -40,9 +40,9 @@ public class ReverseMethods {
                 + s.substring(1, 2)
                 + s.substring(0, 1);
     }
-
+    
     public String reverse17(String s) {
-       
+         return s.substring(16,17) + reverse16(allButLast(s));
     }
 
     // helper methods you can use (you should use one of them)
@@ -63,14 +63,12 @@ public class ReverseMethods {
      * That is, reverse should only call reverse! (and some string manipulation methods).
      */
     public String reverse(String s) {
-
-        if () {
-			// base case
-
+  
+        if ( s.length() <= 1 ) {
+			return s;
         } else {
-			// the recursive case! 
-
+        	// recursion with smaller string.  moving first char to the end.
+        	return reverse(allButFirst(s)) + s.substring(0,1);
         }
     }
-
 }
