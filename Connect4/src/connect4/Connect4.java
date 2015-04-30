@@ -92,10 +92,16 @@ public class Connect4 extends JPanel implements MouseListener{
     private void takeTurn(Move move) {
         myBoard.addPiece(move);
         message = getCurrentPlayer().getName() + " goes in column " + move.getColumn() + ".  ";
+        /*
+         * Base Case to end recursion
+         */
         if ( myBoard.winner(move) != null ) {
             message += getCurrentPlayer().getName() + " wins!  " + getCurrentPlayer().getName() + " wins!  ";
             repaint();
         } else {
+        	/*
+        	 * Swap plaers
+        	 */
             advanceToNextPlayer();
             message += "It is now " + getCurrentPlayer().getName() + "'s turn.  ";
             repaint();
