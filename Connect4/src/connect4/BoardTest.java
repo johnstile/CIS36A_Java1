@@ -45,32 +45,69 @@ public class BoardTest {
     	{
       "_______",
       "_______",
+      "_______",
       "_______"
     	};
     public static String[] B_1 =    
     	{
-      "       ",
-      "       ",
-      " b     "
+      "_______",
+      "_______",
+      "_______",
+      " b______"
     	};    
     public static String[] B_1r0 =    
     	{ 
-      "       ",
-      "       ",
-      "rb    "
+      "_______",
+      "_______",
+      "_______",
+      "rb_____"
     	};
     public static String[] FULL =
     	{
+    	"rrrrrrr",
     	"rrrrrrr",
     	"rrrrrrr",
     	"rrrrrrr"
     	};
     public static String[] B_0 =
     	{
-    	"       ",
-    	"       ",
-    	"r      "
+    	"_______",
+    	"_______",
+    	"_______",
+    	"r______"
     	};
+    ///// Need several winners ////
+    // red winner horizontal
+    public static String[] B_Wh =
+    	{
+    	"_______",
+    	"_______",
+    	"rrrrrrr"
+    	};
+    // red winner vertical
+    public static String[] B_Wv =
+    {
+	"r______",
+	"r______",
+	"r______",
+	"r______"
+	};
+    // red winner diagonal forward
+    public static String[] B_Wdf =
+    {
+	"___r___",
+	"__rb___",
+	"_rbb___",
+	"rbbb___"
+	};
+    // red winner diagonal backward
+    public static String[] B_Wdb =
+    {
+	"_r_____",
+	"_br____",
+	"_bbr___",
+	"_bbbr__"
+	};    
     /*
      * Need a method to quickly create boards
      * -- Because grid was private, must change to package private
@@ -80,7 +117,7 @@ public class BoardTest {
     	Board b = new Board( grid.length, grid[0].length() );
     	for ( int r = 0; r < grid.length; r++){
     		/*
-    		 *  Packs this upside down, so the picture loks good
+    		 *  Packs this upside down, so the picture looks good
     		 */
     		String row = grid[ grid.length - 1 - r  ];
     		for ( int c = 0; c < row.length(); c++){
@@ -103,7 +140,7 @@ public class BoardTest {
     		return BLACK;
     	}else if ( ltr.equals("w")){
     		return WHITE;
-    	} else if ( ltr.equals(" ")){
+    	} else if ( ltr.equals("_")){
     		return null;
     	}
     	return WHITE;
@@ -127,5 +164,57 @@ public class BoardTest {
     	Board b2 = makeBoard(FULL);
     	assertFalse( "Can't move on full column",    b2.possibleMove( new Move(0,RED) )   );
     }
-     
+    @Test
+    public void winner(){
+    	
+    }
+    @Test
+    public void isHorizontalWin(){
+    	//TODO
+    }
+    @Test
+    public void isVerticalWin(){
+    	//TODO
+    }
+    @Test
+    public void isDiagonalForwardUpWinTest(){
+    	//TODO
+    }
+    @Test
+    public void isDiagonalBackwardUpWinTest(){
+    	//TODO
+    }
+    @Test
+    public void consecutiveCellsForPlayerTest(){
+    	//TODO
+    }
+    @Test
+    public void inBoundsTest(){
+    	Board b = makeBoard(B_0);
+    	assertTrue("Valid board row and column", b.inBounds(0,0));
+    	assertFalse("Invalid board column right edge", b.inBounds( 0,b.getCols() ));
+    	assertFalse("Invalid board column left edge", b.inBounds( 0,-1 ));
+    	assertFalse("Invalid board row top edge", b.inBounds( b.getRows(), 0 ));
+       	assertFalse("Invalid board row bottom edge", b.inBounds( -1,b.getRows() ));    	
+    }
+    @Test
+    /*
+     * TODO: Maybe this belongs to Player rather than board
+     *             Move method to player
+     *             Create PlayerTest.java for the method
+     */
+    public void sameColorTest(){
+    	Board b = makeBoard(B_0);
+    	Player p0 = new Player("oneFish", Color.black);
+    	Player p1 = new Player("oneFish", Color.black);
+    	Player p2 = new Player("twoFish", Color.blue);
+    	Player p3 = new Player(); // Had to add null constructor to Player
+    	p3 = null;
+    	// Compare same
+    	assertTrue("Colors are same", b.sameColor( p0,p1));
+    	// Compare different
+    	assertFalse("Colors are different", b.sameColor( p0,p2));
+    	// Compare null
+    	assertFalse("Compare to Null player", b.sameColor( p0,p3));
+    }
 }

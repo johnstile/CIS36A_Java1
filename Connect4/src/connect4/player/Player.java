@@ -16,6 +16,10 @@ public class Player {
 		this.name = name;
 		this.color = color;
 	}
+    // Added a null player for JUnit testing of null
+	public Player() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getName() {
 		return name;

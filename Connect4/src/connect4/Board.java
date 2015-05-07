@@ -137,11 +137,11 @@ public class Board {
         	System.out.println("Yay! Vertical Winner");
         	return lastMove.getPlayer();
         }  
-        if ( isDiagonalForwardUp(r,c,p)  )	{
+        if ( isDiagonalForwardUpWin(r,c,p)  )	{
         	System.out.println("Yay! Diagonal Forward Winner");
         	return lastMove.getPlayer();
         }  
-        if ( isDiagonalBackwardUp(r,c,p)  )	{
+        if ( isDiagonalBackwardUpWin(r,c,p)  )	{
         	System.out.println("Yay! Diagonal Backward Winner");
         	return lastMove.getPlayer();
         } 
@@ -164,13 +164,13 @@ public class Board {
 		return numUp + numDown > MATCHES_TO_WIN;
 	}
 
-	private boolean isDiagonalForwardUp(int r, int c, Player p) {
+	private boolean isDiagonalForwardUpWin(int r, int c, Player p) {
 		int numForwardUp = consecutiveCellsForPlayer(r, c, p, +1, +1);
 		int numBackDown = consecutiveCellsForPlayer(r, c, p, -1, -1);
 		return numForwardUp + numBackDown > MATCHES_TO_WIN;
 	}
 
-	private boolean isDiagonalBackwardUp(int r, int c, Player p) {
+	private boolean isDiagonalBackwardUpWin(int r, int c, Player p) {
 		int numForwardDown = consecutiveCellsForPlayer(r, c, p, -1, +1);
 		int numBackUp = consecutiveCellsForPlayer(r, c, p, +1, -1);
 		return numForwardDown + numBackUp > MATCHES_TO_WIN;
