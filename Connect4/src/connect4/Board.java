@@ -9,6 +9,7 @@ public class Board {
 
 	private int rows;
 	private int cols;
+	private int callHorizwin = 0;
 
 	// Used in determing the winner
 	int matches = 0;
@@ -146,18 +147,22 @@ public class Board {
 	  * Then search other direction
 	  */
 	 public boolean isHorizontalWin(int r, int c,Player p){
-
+		 callHorizwin++;
+		 System.out.println("call isHorizontalWin:" + callHorizwin);
+		 
+		 int  c_neighbor = c + search_direction;
+		 
 		 // Make sure position exists on the board
-		 if ( inBounds(r+search_direction,c) ){
-             Player p2 = getCell(r+search_direction,c);
+		 if ( inBounds(r, c_neighbor) ){
+             Player p2 = getCell(r, c_neighbor);
              // Check if colors match, also handles null 
              if ( sameColor(p, p2) ){
             	 matches++;
-            	 if ( matches >= 4 ){
+            	 if ( matches >= 2 ){
             		 return true;
             	 }
             	 // Compare next position
-            	 return isHorizontalWin( r + search_direction, c, p);
+            	 return isHorizontalWin( r , c_neighbor, p);
              }
 		 } else {
 			 // switch directions if board position does not exist.  
