@@ -1,5 +1,7 @@
 package connect4;
 
+import java.awt.Color;
+
 import connect4.move.Move;
 import connect4.player.Player;
 
@@ -7,10 +9,11 @@ public class Board {
 
 	private int rows;
 	private int cols;
-	
-	private int added_piece_col; // location of last piece added
-	private int added_piece_row; // location of last piece added
 
+	// Used in determing the winner
+	int matches = 0;
+	int search_direction = -1;
+	 
 	/** The grid of spaces of type Player */
 	Player[][] grid;
 
@@ -97,10 +100,9 @@ public class Board {
 		    	}
 		    }
 		    System.out.println("Add to column:" + c + ", row:" +  i + " for Player:" + p );
-		    grid[i][c] = move.getPlayer();
-		    // Need to store position of last move
-		    added_piece_col=c;
-		    added_piece_row=i;
+		    grid[i][c] = p;
+		    // Store position of last move
+		    move.setRow(i);
 		}
 	}
 
@@ -113,72 +115,78 @@ public class Board {
 		// A winner exists if there are 4 in a row, 4 in a column, 4 in a diagonal.
 		// 
 		// 1. get position of lastMove (column and row) 
-		//        Added: added_piece_col and added_piece_row
+		//        Added to Move setRow() and Move.getRow()
 		//
 		// 2. use board.getCell( column, row ) to search for contiguous Player
 		//
 		// 3. count contiguous horizontal, vertical, leftdiag, rightdiag
 		//
-		Player p = lastMove.getPlayer();
-		int contiguous_col = 0;
-		int contiguous_row = 0;
-		int leftdiag = 0;
-		int rightdiag = 0;
-
-//THIS DOESN"T WORK		
-//		System.out.println("Check for Horizontal Winner");
-//		if ( sameNeighborHorizontal(added_piece_col, added_piece_row) == 4 ){
-//			return grid[added_piece_col][added_piece_row];
-//		}
-		
-		return null;
+		 Player p =  lastMove.getPlayer();
+		 int c =  lastMove.getColumn();
+		 int r =  lastMove.getRow();
+	
+		System.out.println("Check for Horizontal Winner");
+        
+		if ( isHorizontalWin(r,c,p)  )	{
+        	System.out.println("Yay! Horizontal Winner");
+        	return lastMove.getPlayer();
+        }
+        
+        return null;
 	}
 	
-	public int sameNeighborHorizontal(int col, int row){
-		int count = 0; // How many contiguous matches
-		int steps = 0; // How many steps searched
-		
-		Player p = grid[col][row];
-		
-		while ( count <= 4 ){
-		
-	
-			// Begin: Search left, don't go off the board
-			if ( steps <= 0  && steps >= -3 &&  (col + steps ) > 0 ){
-				// search to the left
-				steps--;
-				System.out.println("Search steps:" + steps + ", from col:" + col + " row:" +row );
-			    Player p_neighbor = grid[ col + steps ][ row  ];
-			    System.out.println("color: " + p.getColor());
-			    if ( p.getColor() == p_neighbor.getColor() ){
-			        count++; 
-			        p = p_neighbor;
-			    } else {
-			    	// Start search to the right
-			    	steps = 1;
-			    	// Reset to starting position
-			    	p = grid[col][row];
-			    }
-			} // End: Search left
-			
-			// Begin: Search right
-			if (steps >= 1 && steps <= 3 &&  (col + steps ) < cols   ){
-				// search to the right
-				steps ++;
-			    Player p_neighbor = grid[ col  + steps ][ row ];
-			    if ( p.getColor() == p_neighbor.getColor() ){
-			        count++; 
-			        p = p_neighbor;
-			    } else {
-			    	// End searching
-			    	steps = 4;
-			    	// Reset to starting position
-			    	p = grid[col][row];			    	
-			    }
-			} // End: Search right			
+	 /* False conditions:
+	  *   inBounds
+	  *   not null
+	  *   
+	  * sameColor && counter < 4
+	  * samecolor  && counter >=4
+	  * 
+	  * Search one direction
+	  * Then search other direction
+	  */
+	 public boolean isHorizontalWin(int r, int c,Player p){
+
+		 // Make sure position exists on the board
+		 if ( inBounds(r+search_direction,c) ){
+             Player p2 = getCell(r+search_direction,c);
+             // Check if colors match, also handles null 
+             if ( sameColor(p, p2) ){
+            	 matches++;
+            	 if ( matches >= 4 ){
+            		 return true;
+            	 }
+            	 // Compare next position
+            	 return isHorizontalWin( r + search_direction, c, p);
+             }
+		 } else {
+			 // switch directions if board position does not exist.  
+			 search_direction = 1;
+		 }
+		 return false;
+	 }
+	 /*
+	  *  Find edges of the board.
+	  */
+	 public boolean inBounds(int r, int c){
+		    if ( c < 0 || c >= cols ){
+		        return false;
+		    }
+		    if ( r < 0 || r >= rows){
+		        return false;
+		    }
+		    return true;
 		}
-		return count;
-	}
-	
-
+    /*
+     * Compare colors. player could be null 
+     */
+    public boolean sameColor( Player p1, Player p2 ){
+	   if ( p1 == null  || p2 == null ){
+		   return false;
+	   }
+	   if ( p1.getColor() != p2.getColor() ){
+		   return false;
+	   }
+	   return true;
+    }
 } // end Board class
