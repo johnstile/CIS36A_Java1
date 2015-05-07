@@ -53,7 +53,7 @@ public class BoardTest {
       "_______",
       "_______",
       "_______",
-      " b______"
+      "_b_____"
     	};    
     public static String[] B_1r0 =    
     	{ 
@@ -80,6 +80,7 @@ public class BoardTest {
     // red winner horizontal
     public static String[] B_Wh =
     	{
+    	"_______",
     	"_______",
     	"_______",
     	"rrrrrrr"
