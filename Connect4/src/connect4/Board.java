@@ -131,12 +131,22 @@ public class Board {
 		if ( isHorizontalWin(r,c,p)  )	{
         	System.out.println("Yay! Horizontal Winner");
         	return lastMove.getPlayer();
-        }
-        
+        } 
+        if ( isVerticalWin(r,c,p)  )	{
+        	System.out.println("Yay! Horizontal Winner");
+        	return lastMove.getPlayer();
+        }  
+        if ( isDiagForwardWin(r,c,p)  )	{
+        	System.out.println("Yay! Horizontal Winner");
+        	return lastMove.getPlayer();
+        }  
+        if ( isDiagBackwardWin(r,c,p)  )	{
+        	System.out.println("Yay! Horizontal Winner");
+        	return lastMove.getPlayer();
+        } 
         return null;
 	}
-	
-	 /* False conditions:
+	/* False conditions:
 	  *   inBounds
 	  *   not null
 	  *   
@@ -156,7 +166,7 @@ public class Board {
 		 System.out.println("call isHorizontalWin:" + callHorizwin);
 		 
 		 // Hold column on board to be checked
-		 int  c_neighbor = c + search_direction;
+		 int c_neighbor = c + search_direction;
 		 
 		 // Make sure position exists on the board
 		 if ( inBounds(r, c_neighbor) ){
@@ -193,6 +203,22 @@ public class Board {
 		 }
 		 return false;
 	 }
+		
+	 private boolean isVerticalWin(int r, int c, Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean isDiagForwardWin(int r, int c, Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private boolean isDiagBackwardWin(int r, int c, Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	 /*
 	  *  Find edges of the board.
 	  */
