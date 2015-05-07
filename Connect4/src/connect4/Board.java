@@ -66,7 +66,7 @@ public class Board {
 	public boolean possibleMove(Move move) {
 		// TODO: this is a test stub, you need to rewrite this.
 		
-		System.out.println("possibleMove");
+		//System.out.println("possibleMove");
 		//   Move has a  Player and a column
 		
 		// How do we determine if the move is valid?
@@ -74,7 +74,7 @@ public class Board {
 
 		// Store the column clicked
 		int c = move.getColumn(); 
-		System.out.println("Column:" + c );
+		//System.out.println("Column:" + c );
 		
 		// Store the player at the last row in column
 		Player p2 = getCell( this.rows - 1, c );
@@ -147,26 +147,49 @@ public class Board {
 	  * Then search other direction
 	  */
 	 public boolean isHorizontalWin(int r, int c,Player p){
+		 
+		 /*
+		  *  I am using this for debugging
+		  *  Trying to see if recursion works to find 4 in a row
+		  */
 		 callHorizwin++;
 		 System.out.println("call isHorizontalWin:" + callHorizwin);
 		 
+		 // Hold column on board to be checked
 		 int  c_neighbor = c + search_direction;
 		 
 		 // Make sure position exists on the board
 		 if ( inBounds(r, c_neighbor) ){
-             Player p2 = getCell(r, c_neighbor);
+             
+			 // player can be null or not null
+			 Player p2 = getCell(r, c_neighbor);
+			 
              // Check if colors match, also handles null 
              if ( sameColor(p, p2) ){
+            	 
+            	 // increment counter of contiguous colors
             	 matches++;
+            	 
+            	 /*
+            	  *  This is the whole point of the game.
+            	  *   Are there 4 in a row?
+            	  */
             	 if ( matches >= 4 ){
             		 return true;
             	 }
+            	 
             	 // Compare next position
             	 return isHorizontalWin( r , c_neighbor, p);
+            	 
              }
 		 } else {
-			 // switch directions if board position does not exist.  
+			 /*  
+			  * If position on board does not exist
+			  *  switch directions
+			  *  and call isHorizontalWin again
+			  */
 			 search_direction = 1;
+			 return isHorizontalWin( r , c, p);
 		 }
 		 return false;
 	 }
