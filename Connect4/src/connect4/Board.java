@@ -200,7 +200,19 @@ public class Board {
             		 return true;
             	 }
 
+             } else {
+            	 /*
+            	  * if the color doesn't match give up on this direciton
+            	  * if going left, switch to right
+            	  * if going right, return false  
+            	  */
+            	 if (search_direction < 0 ){
+            		 search_direction=1;
+            	 } else {
+            		 return false;
+            	 }
              }
+             
 		 } else {
 			 /*  
 			  * If position on board does not exist
