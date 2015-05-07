@@ -13,7 +13,8 @@ public class Board {
 
 	// Used in determing the winner
 	int matches = 0;
-	int search_direction = -1;
+	int search_direction = -1; // default to search left
+	int search_steps = 0;  // at most  4 - 1 spaces
 	 
 	/** The grid of spaces of type Player */
 	Player[][] grid;
@@ -153,6 +154,8 @@ public class Board {
 	  * sameColor && counter < 4
 	  * samecolor  && counter >=4
 	  * 
+	  * * BE PREPARED TO MAKE THIS CONNECT 5
+	  * 
 	  * Search one direction
 	  * Then search other direction
 	  */
@@ -164,6 +167,15 @@ public class Board {
 		  */
 		 callHorizwin++;
 		 System.out.println("call isHorizontalWin:" + callHorizwin);
+		 
+		 /*
+		  * Search left, then right, then give up
+		  */
+		 if ( search_steps < -3  ){
+			 search_direction = 1;
+		 } else if ( search_steps >= 3 ){
+		     return false;
+		 }
 		 
 		 // Hold column on board to be checked
 		 int c_neighbor = c + search_direction;
@@ -187,10 +199,7 @@ public class Board {
             	 if ( matches >= 4 ){
             		 return true;
             	 }
-            	 
-            	 // Compare next position
-            	 return isHorizontalWin( r , c_neighbor, p);
-            	 
+
              }
 		 } else {
 			 /*  
@@ -199,9 +208,10 @@ public class Board {
 			  *  and call isHorizontalWin again
 			  */
 			 search_direction = 1;
-			 return isHorizontalWin( r , c, p);
 		 }
-		 return false;
+    	 // Compare next position
+    	 return isHorizontalWin( r , c_neighbor, p);
+    	 
 	 }
 		
 	 private boolean isVerticalWin(int r, int c, Player p) {
