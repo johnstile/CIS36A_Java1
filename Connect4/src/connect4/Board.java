@@ -158,7 +158,7 @@ public class Board {
              // Check if colors match, also handles null 
              if ( sameColor(p, p2) ){
             	 matches++;
-            	 if ( matches >= 2 ){
+            	 if ( matches >= 4 ){
             		 return true;
             	 }
             	 // Compare next position
