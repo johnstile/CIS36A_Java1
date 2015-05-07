@@ -1,7 +1,5 @@
 package connect4;
 
-import java.awt.Color;
-
 import connect4.move.Move;
 import connect4.player.Player;
 
@@ -9,9 +7,10 @@ public class Board {
 
 	private int rows;
 	private int cols;
-	private int callHorizwin = 0;
-
-	// Used in determing the winner
+	
+	private static final int MATCHES_TO_WIN = 4;
+	  
+	// Used in determine the winner
 	int matches = 0;
 	int search_direction = -1; // default to search left
 	int search_steps = 0;  // at most  4 - 1 spaces
@@ -85,11 +84,12 @@ public class Board {
 	}
 
 	// Adds a piece to the board for a given Move
+	// Side effect: records the row position of move with move.setRow()
 	public void addPiece(Move move) {
 		// TODO: this is a test stub, you need to rewrite this.
 		
 		// Move has a Player and column
-		// As long as one row is free, we are guaranteed
+		// As long as one row is free, we are guaranteed success
 		if ( possibleMove(move) == true ){
 			Player p = move.getPlayer();
 			int  c = move.getColumn();
@@ -108,139 +108,105 @@ public class Board {
 		}
 	}
 
-	// if the board contains a winning position, returns the Player that wins.
-	// Otherwise, returns null. You could ignore lastMove.
+	/*
+	 *  if the board contains a winning position, returns the Player that wins.
+	 *  Otherwise, returns null. You could ignore lastMove.
+	 */
 	public Player winner(Move lastMove) {
 		// TODO: write this. Currently, there is never a winner.
 		
-		// Plan:
-		// A winner exists if there are 4 in a row, 4 in a column, 4 in a diagonal.
-		// 
-		// 1. get position of lastMove (column and row) 
-		//        Added to Move setRow() and Move.getRow()
-		//
-		// 2. use board.getCell( column, row ) to search for contiguous Player
-		//
-		// 3. count contiguous horizontal, vertical, leftdiag, rightdiag
-		//
+		/* Plan:
+		 * A winner exists if there are:
+		 *   1. MATCHES_TO_WIN in a row,  ( -- )
+		 *   2. MATCHES_TO_WIN in a column,   ( | )
+		 *   3. MATCHES_TO_WIN in a diagonalForward  ( / )
+		 *   4. MATCHES_TO_WIN in a diagonalBackward ( \ )
+		 *   if any work, return the winning Player
+		 */
 		 Player p =  lastMove.getPlayer();
 		 int c =  lastMove.getColumn();
 		 int r =  lastMove.getRow();
 	
-		System.out.println("Check for Horizontal Winner");
+		//System.out.println("Check for Winner");
         
 		if ( isHorizontalWin(r,c,p)  )	{
         	System.out.println("Yay! Horizontal Winner");
         	return lastMove.getPlayer();
         } 
         if ( isVerticalWin(r,c,p)  )	{
-        	System.out.println("Yay! Horizontal Winner");
+        	System.out.println("Yay! Vertical Winner");
         	return lastMove.getPlayer();
         }  
-        if ( isDiagForwardWin(r,c,p)  )	{
-        	System.out.println("Yay! Horizontal Winner");
+        if ( isDiagonalForwardUp(r,c,p)  )	{
+        	System.out.println("Yay! Diagonal Forward Winner");
         	return lastMove.getPlayer();
         }  
-        if ( isDiagBackwardWin(r,c,p)  )	{
-        	System.out.println("Yay! Horizontal Winner");
+        if ( isDiagonalBackwardUp(r,c,p)  )	{
+        	System.out.println("Yay! Diagonal Backward Winner");
         	return lastMove.getPlayer();
         } 
         return null;
 	}
-	/* False conditions:
-	  *   inBounds
-	  *   not null
-	  *   
-	  * sameColor && counter < 4
-	  * samecolor  && counter >=4
-	  * 
-	  * * BE PREPARED TO MAKE THIS CONNECT 5
-	  * 
-	  * Search one direction
-	  * Then search other direction
-	  */
-	 public boolean isHorizontalWin(int r, int c,Player p){
-		 
-		 /*
-		  *  I am using this for debugging
-		  *  Trying to see if recursion works to find 4 in a row
-		  */
-		 callHorizwin++;
-		 System.out.println("call isHorizontalWin:" + callHorizwin);
-		 
-		 /*
-		  * Search left, then right, then give up
-		  */
-		 if ( search_steps < -3  ){
-			 search_direction = 1;
-		 } else if ( search_steps >= 3 ){
-		     return false;
-		 }
-		 
-		 // Hold column on board to be checked
-		 int c_neighbor = c + search_direction;
-		 
-		 // Make sure position exists on the board
-		 if ( inBounds(r, c_neighbor) ){
-             
-			 // player can be null or not null
-			 Player p2 = getCell(r, c_neighbor);
-			 
-             // Check if colors match, also handles null 
-             if ( sameColor(p, p2) ){
-            	 
-            	 // increment counter of contiguous colors
-            	 matches++;
-            	 
-            	 /*
-            	  *  This is the whole point of the game.
-            	  *   Are there 4 in a row?
-            	  */
-            	 if ( matches >= 4 ){
-            		 return true;
-            	 }
-
-             } else {
-            	 /*
-            	  * if the color doesn't match give up on this direciton
-            	  * if going left, switch to right
-            	  * if going right, return false  
-            	  */
-            	 if (search_direction < 0 ){
-            		 search_direction=1;
-            	 } else {
-            		 return false;
-            	 }
-             }
-             
-		 } else {
-			 /*  
-			  * If position on board does not exist
-			  *  switch directions
-			  *  and call isHorizontalWin again
-			  */
-			 search_direction = 1;
-		 }
-    	 // Compare next position
-    	 return isHorizontalWin( r , c_neighbor, p);
-    	 
-	 }
-		
-	 private boolean isVerticalWin(int r, int c, Player p) {
-		// TODO Auto-generated method stub
-		return false;
+	/*
+	 * Using recursion, all these tests look very close
+	 * Tally contiguous homogeneous Player in a given direction
+	 * Sum the 2 directions and compare with MATCHES_TO_WIN
+	 */
+	private boolean isHorizontalWin(int r, int c, Player p) {
+		int numForward = consecutiveCellsForPlayer(r, c, p, 0, +1);
+		int numBack = consecutiveCellsForPlayer(r, c, p, 0, -1);
+		return numForward + numBack > MATCHES_TO_WIN;
 	}
 
-	private boolean isDiagForwardWin(int r, int c, Player p) {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean isVerticalWin(int r, int c, Player p) {
+		int numUp = consecutiveCellsForPlayer(r, c, p, +1, 0);
+		int numDown = consecutiveCellsForPlayer(r, c, p, -1, 0);
+		return numUp + numDown > MATCHES_TO_WIN;
 	}
 
-	private boolean isDiagBackwardWin(int r, int c, Player p) {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean isDiagonalForwardUp(int r, int c, Player p) {
+		int numForwardUp = consecutiveCellsForPlayer(r, c, p, +1, +1);
+		int numBackDown = consecutiveCellsForPlayer(r, c, p, -1, -1);
+		return numForwardUp + numBackDown > MATCHES_TO_WIN;
 	}
 
+	private boolean isDiagonalBackwardUp(int r, int c, Player p) {
+		int numForwardDown = consecutiveCellsForPlayer(r, c, p, -1, +1);
+		int numBackUp = consecutiveCellsForPlayer(r, c, p, +1, -1);
+		return numForwardDown + numBackUp > MATCHES_TO_WIN;
+	}
+	/*
+	 * This is the bane of my existence: recursion
+	 *     Return 0 or 1 + call self again
+	 *     Exit condition: color does not match
+	 *     Recurse condition: colors match
+	 *  Direction of search determined by rowStep and columnStep
+	 */
+	private int consecutiveCellsForPlayer( int r, int c, Player p, int rowStep, int columnStep) {
+	    /*
+	     * If within the board, get Player new position 
+	     */
+		Player p2 = inBounds(r, c) ? getCell(r, c) : null;
+		/*
+		 * If color matches (method handles null Player)
+		 */
+		if (  sameColor(p,p2)  ) {
+			/*
+			 * Move to next board position
+			 */
+			int next_r = r + rowStep;
+			int next_c = c + columnStep;
+			/*
+			 *   At this point they get 1 point
+			 *   And output of subsequent calls to self
+			 */
+			return 1 + consecutiveCellsForPlayer( next_r, next_c, p, rowStep, columnStep);
+		}
+		/*
+		 *  Stop recursion when no more matches
+		 */
+		return 0;
+	}	 
 	 /*
 	  *  Find edges of the board.
 	  */
