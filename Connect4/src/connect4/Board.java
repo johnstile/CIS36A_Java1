@@ -151,8 +151,9 @@ public class Board {
 	 * Using recursion, all these tests look very close
 	 * Tally contiguous homogeneous Player in a given direction
 	 * Sum the 2 directions and compare with MATCHES_TO_WIN
+	 * FOR TESTING, had to make these package private.
 	 */
-	private boolean isHorizontalWin(int r, int c, Player p) {
+	boolean isHorizontalWin(int r, int c, Player p) {
 		int numForward = consecutiveCellsForPlayer(r, c, p, 0, +1);
 		int numBack = consecutiveCellsForPlayer(r, c, p, 0, -1);
 		return numForward + numBack > MATCHES_TO_WIN;
@@ -180,9 +181,16 @@ public class Board {
 	 *     Return 0 or 1 + call self again
 	 *     Exit condition: color does not match
 	 *     Recurse condition: colors match
+	 *     Arguments to method carry the growing value
 	 *  Direction of search determined by rowStep and columnStep
+     *
+     *  REF: http://www.devshed.com/c/a/practices/solving-problems-with-recursion/
+     *  method argument accepts state, modify it, and passes to next call of self
+     *  method eventually stop calling self (stop condition: non-match )
+     *   
+     *   FOR TESTING, had to make these package private.
 	 */
-	private int consecutiveCellsForPlayer( int r, int c, Player p, int rowStep, int columnStep) {
+	int consecutiveCellsForPlayer( int r, int c, Player p, int rowStep, int columnStep) {
 	    /*
 	     * If within the board, get Player new position 
 	     */

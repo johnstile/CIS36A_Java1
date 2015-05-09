@@ -108,7 +108,41 @@ public class BoardTest {
 	"_br____",
 	"_bbr___",
 	"_bbbr__"
-	};    
+	};
+    ///// Need several Almost Winners ////
+    // red winner horizontal
+    public static String[] B_AWh =
+    	{
+    	"_______",
+    	"_______",
+    	"_______",
+    	"_rrrrrr"
+    	};
+    // red winner vertical
+    public static String[] B_AWv =
+    {
+	"_______",
+	"r______",
+	"r______",
+	"r______"
+	};
+    // red winner diagonal forward
+    public static String[] B_AWdf =
+    {
+	"_______",
+	"__rb___",
+	"_rbb___",
+	"rbbb___"
+	};
+    // red winner diagonal backward
+    public static String[] B_AWdb =
+    {
+	"_______",
+	"_br____",
+	"_bbr___",
+	"_bbbr__"
+	};
+    
     /*
      * Need a method to quickly create boards
      * -- Because grid was private, must change to package private
@@ -118,7 +152,8 @@ public class BoardTest {
     	Board b = new Board( grid.length, grid[0].length() );
     	for ( int r = 0; r < grid.length; r++){
     		/*
-    		 *  Packs this upside down, so the picture looks good
+    		 *  Packs this upside down, 
+    		 *  so the array layout looks like the board layout
     		 */
     		String row = grid[ grid.length - 1 - r  ];
     		for ( int c = 0; c < row.length(); c++){
@@ -165,16 +200,29 @@ public class BoardTest {
     	Board b2 = makeBoard(FULL);
     	assertFalse( "Can't move on full column",    b2.possibleMove( new Move(0,RED) )   );
     }
+    /*
+     * B_AWv  -> Add red to col 0 to win
+     * B_AWh  -> Add red to col 0 to win
+     * B_AWdf -> Add red to col 3 to win
+     * B_AWdb -> Add red to col 1 to win
+     */
     @Test
-    public void winner(){
-    	
+    public void winnerTest(){
+    	Board b = makeBoard(B_AWv);
+    	Player RED = new Player( "red", Color.RED);
+    	Player WIN = b.winner( new Move(0,RED) );
+    	System.out.println( WIN );
+    	assertEquals("Winner is red", WIN,  RED );
     }
     @Test
-    public void isHorizontalWin(){
-    	//TODO
+    public void isHorizontalWinTest(){
+    	// Had to make isHorizontalWin package private
+    	Board b = makeBoard(B_Wh);
+    	Player RED = new Player( "red", Color.RED);
+    	assertTrue( "Horizontal Winner", b.isHorizontalWin( 0,0, RED) );
     }
     @Test
-    public void isVerticalWin(){
+    public void isVerticalWinTest(){
     	//TODO
     }
     @Test
@@ -187,7 +235,19 @@ public class BoardTest {
     }
     @Test
     public void consecutiveCellsForPlayerTest(){
-    	//TODO
+    	Board bh = makeBoard(B_Wh); // horizontal 7
+    	Board bv = makeBoard(B_Wv);  // vertical 4
+    	Board bdu = makeBoard(B_Wdf);  // diagonal forward 4
+    	Board bdb = makeBoard(B_Wdb);  // diagonal forward 4
+    	Player RED = new Player( "red", Color.RED);
+    	// From the first column and row, step right until end
+    	assertEquals(  "Four in a row", bh.consecutiveCellsForPlayer( 0, 0, RED, 0, 1), 7 );
+    	// From the first column and row, step up until last match
+    	assertEquals(  "Four in a row", bv.consecutiveCellsForPlayer( 0, 0, RED, 1, 0), 4 );
+    	// From the first column and row, step up and right until last match
+    	assertEquals(  "Four in a row", bdu.consecutiveCellsForPlayer( 0, 0, RED, 1, 1), 4 );
+    	// From the first column and row, step up and left until last match
+    	assertEquals(  "Four in a row", bdb.consecutiveCellsForPlayer( 0, 4, RED, 1, -1), 4 );
     }
     @Test
     public void inBoundsTest(){
