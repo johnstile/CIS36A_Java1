@@ -1,16 +1,24 @@
 package connect4;
 
 
+import connect4.move.BombMove;
 import connect4.move.Move;
+import connect4.move.QuitMove;
 import connect4.player.Player;
 import connect4.player.ComputerPlayer;
 import connect4.player.StupidComputerPlayer;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import java.util.ArrayList;
 
 public class Connect4 extends JPanel implements MouseListener{
@@ -18,15 +26,19 @@ public class Connect4 extends JPanel implements MouseListener{
     // These control the size of the board.  The traditional Connect 4 board is 
     // seven spaces wide by six spaces high
     private static final int ROWS = 6;
-    private static final int COLS = 7;
-
+	private static final int COLS = 7;
     private static final int pieceSize = 50;     //size of the pieces in pixels
     private static final int spacing = 10;       //spacing between adjacent pieces in pixels;
-    private static final int headerHeight = 50;  // height of header for messages and column numbers
+    private static final int headerHeight = 70;  // height of header for messages and column numbers
     private String message = "";
     
+    private JButton myButton;
+    private JPanel myPanel;
+    private JButton myButtonQuit;
     private JFrame myFrame;
     private Board myBoard;
+    
+    private boolean noWinner = true; // instance variable marking a winner has been found
 
     // this contains the ordered list of players in the game
     private ArrayList<Player> players;
@@ -38,17 +50,51 @@ public class Connect4 extends JPanel implements MouseListener{
        * @param cols int
        */   
     public Connect4(int rows, int cols ) {
-        myFrame = new JFrame();
+        
+
+        /*
+         *   myFrame
+         *       myPanel
+         *         myButton
+         */
+        myFrame = new JFrame(); 
+        myButton = new JButton("Quit");
+        
         this.myBoard = new Board(rows, cols);
+        
         addMouseListener(this);
-        // the hard numbers at the end are for the menubar at the top and side handles
-        myFrame.setSize( myBoard.getCols() * (pieceSize + spacing) + spacing + 10,
-                         myBoard.getRows() * (pieceSize + spacing) + spacing + headerHeight + 35);
+        
+        // the hard numbers at the end are for the menu bar at the top and side handles
+        // The extra 40 is for the close button
+        // Adding 20 to vertical to make room for quit button
+        myFrame.setSize( myBoard.getCols() * (pieceSize + spacing) + spacing + 10 + 40,
+                         myBoard.getRows() * (pieceSize + spacing) + spacing + headerHeight + 35 + 20);
         myFrame.add(this);
+        
         myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //myFrame.setResizable( false );
         myFrame.setTitle( "Connect Four" );
         myFrame.setVisible(true);
+
+        myButton.setLocation(0, 10);
+        myButton.setPreferredSize(new Dimension(100, 20));
+        /*
+         * Handle the Quit button with an ActionListener
+         * this uses an in-line anonymous method
+         * that calls takeTurn with a QuitMove and current player and message
+         */
+        myButton.addActionListener ( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Player p = getCurrentPlayer();
+				p.getName();
+				takeTurn( new QuitMove(p, p.getName() + " quit the game!!!") );
+			}
+        	
+        });
+        
+        this.add(myButton);
         
         // start a new game 
         newGame();
@@ -62,8 +108,18 @@ public class Connect4 extends JPanel implements MouseListener{
     //  the play() and takeTurn() methods.  These call each other, which is a type of
     //  recursion (called mutual recursion).  
     // Call newGame() to restart the game, or start it for the first time.
-    
-    public void newGame() {
+//    
+//    private ActionListener makeActionListener() {
+//       ActionListener tmp = new ActionListener() {
+//    	   
+//       }
+//    	
+//    	return null;
+//	}
+
+
+
+	public void newGame() {
         myBoard.reset();
         players = new ArrayList<Player>();
         Player p1 = new Player("Jane", Color.black);
@@ -76,31 +132,103 @@ public class Connect4 extends JPanel implements MouseListener{
         play();
     }
     
-    
+	private boolean moreMovesPossible(){
+		/*
+		 *  Computer should quit the game if there are no more moves
+		 *  Search each column for possible move. 
+		 *  
+		 */
+		for (int i = 0; i < COLS ; i++){
+		    if ( myBoard.possibleMove(new Move(i, getCurrentPlayer()))){
+		    	return true;
+		    }
+		}
+		return false;
+	}
     // start the recursion to play the game.  
     private void play() {
-        if ( (getCurrentPlayer() instanceof ComputerPlayer ) ) {
+
+    	if ( (getCurrentPlayer() instanceof ComputerPlayer ) ) {
+    		/*
+    		 *  Computer should quit the game if there are no more moves
+    		 *  Search each column for possible move. 
+    		 *  Returns true if any column has a possible move 
+    		 */
+    		if (! moreMovesPossible()){
+    			takeTurn( new QuitMove(getCurrentPlayer(), getCurrentPlayer().getName() +  " quit the game.  No moves possible") );
+    			this.noWinner = false;
+    		}
+    		
             // the player is a ComputerPlayer, so can calculate its own move
             // only ComputerPlayers have a getMove method, so we have to cast getCurrentPlayer into one.
             ComputerPlayer computer = (ComputerPlayer) getCurrentPlayer();
             takeTurn(computer.getMove(myBoard));
         }
-        // otherwise, the player isn't a ComputerPlayer, so we stop, and let the listener invoke takeTurn()
+
     }
-    
-    
-    private void takeTurn(Move move) {
+
+    private void takeTurn(BombMove move){
+    	
+    	
         myBoard.addPiece(move);
         message = getCurrentPlayer().getName() + " goes in column " + move.getColumn() + ".  ";
+        
+    	// position of move
+    	int c = move.getColumn();
+    	int r =  move.getRow();
+        System.out.println("Droped bomb at col:" + c + ", row:" + r );
+        
+        // Iterate over all neighbors
+        for ( int i = (c - 1);  i <= c + 1; i++){
+        	for ( int j = (r -1); j <= r +1 ; j++ ){
+                // If they are valid board positions, nullify
+        		if ( myBoard.inBounds(j, i) ){
+	        	    	//System.out.println("Null grid["+ j + "][" + i + "]");
+	        	    	myBoard.grid[j][i] = null;	        	   
+        		} else {
+        			//System.out.println("Skip grid["+ j + "][" + i + "]");
+        		}
+        	}
+        }
+    	System.out.println("bbbbbbbbbb");
+    	
+    	/*
+    	 * Swap players
+    	 */
+        advanceToNextPlayer();
+        message += "It is now " + getCurrentPlayer().getName() + "'s turn.  ";
+        repaint();
+        play();
+    }
+    private void takeTurn(QuitMove move ) {
+    	// quit();
+    	this.noWinner = false;
+    	this.message = move.getMessage();
+    	repaint();
+    }
+    private void takeTurn(Move move) {
+        if ( ! noWinner ){
+        	return;
+        }
+    	
+        myBoard.addPiece(move);
+        message = getCurrentPlayer().getName() + " goes in column " + move.getColumn() + ".  ";
+       
         /*
          * Base Case to end recursion
          */
-        if ( myBoard.winner(move) != null ) {
+        if ( myBoard.winner(move) != null  ) {
+        	
+        	System.out.println("+++++++++++++++++++++++++");
+        	noWinner = false;
             message += getCurrentPlayer().getName() + " wins!  " + getCurrentPlayer().getName() + " wins!  ";
             repaint();
+        	// Stop the game.  Implement "quit". 
+
         } else {
+        	System.out.println("-----------------------------------------");
         	/*
-        	 * Swap plaers
+        	 * Swap players
         	 */
             advanceToNextPlayer();
             message += "It is now " + getCurrentPlayer().getName() + "'s turn.  ";
@@ -110,7 +238,13 @@ public class Connect4 extends JPanel implements MouseListener{
     }
     
     
-    // returns the current player
+    private void quit() {
+		// TODO Auto-generated method stub
+    	System.exit(0);
+		
+	}
+
+	// returns the current player
     private Player getCurrentPlayer () {
         return players.get(currentPlayerIndex);
     }
@@ -127,15 +261,40 @@ public class Connect4 extends JPanel implements MouseListener{
     //////Listener
     //////
     public void mouseClicked(MouseEvent e) {
+
         // only process the click if the current player isn't a computer player
         if ( ! (getCurrentPlayer() instanceof ComputerPlayer)) {
-            // find out which column was clicked on...
+
+        	// find out which column was clicked on...
             int c = myBoard.getCols();
             while ( (e.getX() < horizontalPos(c)) && (c > 0) ) {
                 c--;
             }
-            // and restart the gameplay recursion
-            takeTurn( new Move(c, getCurrentPlayer()) );
+            /*
+             * Right click drops the bomb
+             */
+        	if ( SwingUtilities.isRightMouseButton(e) ){
+        		/*
+        		 * Check if we have a bomb
+        		 */
+        		if ( getCurrentPlayer().hasBomb() ){
+        		    System.out.println("Droped a bomb");
+        		    try {
+						getCurrentPlayer().useBomb();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+        		    takeTurn( new BombMove(c, getCurrentPlayer()) );
+        		} else {
+        			System.out.println("No Bomb For You! Loose a turn!");
+        		}
+        	} else {
+        		// Normal move
+                // and restart the gameplay recursion
+                takeTurn( new Move(c, getCurrentPlayer()) );
+        	}
+            
         }
     }
 
@@ -153,19 +312,20 @@ public class Connect4 extends JPanel implements MouseListener{
     
     
     ///// GRAPHICS
-    /////
-    public void paint( Graphics g ) {
+    /////  override paintComponent so that the button will redraw (children of jpannel)
+    public void paintComponent( Graphics g ) {
         g.setColor( Color.BLUE );
         g.fillRect( 0, 0, myFrame.getWidth(), myFrame.getHeight() );
         Player cell;
+
         
         // draw column header (numbers and message)
         g.setColor(Color.white);
-        g.drawString(message, pieceSize, headerHeight - 25);
+        g.drawString(message, pieceSize, headerHeight - 25 );
+        
         for (int c = 0; c < myBoard.getCols(); c++) {
             g.drawString(Integer.toString(c), horizontalPos(c) + pieceSize/2 - 4, headerHeight);
         }
-        
         // draw pieces
         for(int r = 0; r < myBoard.getRows(); r++ ) {
             for(int c = 0; c < myBoard.getCols(); c++ ) {

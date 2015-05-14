@@ -7,11 +7,15 @@ import connect4.player.Player;
 public class QuitMove extends Move {
 
     // A place for the quitting quitter to get in one last taunt
-    private String partingMessage;
+    private String partingMessage = "Quitter Gon'a Quit!";
 
     // constructor doesn't need a column, since they are quitting.
     public QuitMove(Player player, String message) {
         super(-1, player);
         this.partingMessage = message;
     }
+    public String getMessage(){
+    	return partingMessage;
+    }
+    
 }

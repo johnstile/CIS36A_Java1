@@ -12,7 +12,8 @@ import java.awt.Color;
  */
 public abstract class ComputerPlayer extends Player {
 
-    public ComputerPlayer(String name, Color color) {
+
+	public ComputerPlayer(String name, Color color) {
         super(name, color);
     }
 

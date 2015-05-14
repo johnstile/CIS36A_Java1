@@ -11,5 +11,9 @@ public class BombMove extends Move {
     // We need to specify this, since the constructor takes an argument
     public BombMove (int column, Player player) {
         super(column, player);
+        doDamage();
+    }
+    public void doDamage(){
+    	System.out.println("Ouch!");
     }
 }

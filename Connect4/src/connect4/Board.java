@@ -8,6 +8,8 @@ public class Board {
 	private int rows;
 	private int cols;
 	
+	private Player  WinningPlayer = null;
+	
 	private static final int MATCHES_TO_WIN = 4;
 	  
 	// Used in determine the winner
@@ -44,6 +46,9 @@ public class Board {
 
 	public int getCols() {
 		return cols;
+	}
+	public Player getWinner(){
+		return WinningPlayer;
 	}
 
 	/**
@@ -114,6 +119,7 @@ public class Board {
 	 */
 	public Player winner(Move lastMove) {
 		// TODO: write this. Currently, there is never a winner.
+		
 		
 		/* Plan:
 		 * A winner exists if there are:
@@ -219,13 +225,11 @@ public class Board {
 	  *  Find edges of the board.
 	  */
 	 public boolean inBounds(int r, int c){
-		    if ( c < 0 || c >= cols ){
-		        return false;
+		    if ( c >= 0 && c < cols  && r >= 0 && r < rows ){
+		    	return true;
+		    } else {
+		    	return false;
 		    }
-		    if ( r < 0 || r >= rows){
-		        return false;
-		    }
-		    return true;
 		}
     /*
      * Compare colors. player could be null 
@@ -239,4 +243,23 @@ public class Board {
 	   }
 	   return true;
     }
+
+	public boolean movesRemain(Player currentPlayer) {
+		/*
+		 *   null positions are possible moves
+		 *   Count up the possible moves
+		 * 
+		 */
+		int count_possible_moves = 0;
+		for (int c=0 ; c < rows; c++){
+			for (int r=0 ; r < rows; r++){
+			    if ( grid[r][c] == null ){
+			    	count_possible_moves ++;
+			    }
+			}
+		}
+		System.out.println("count_possible_moves:" + count_possible_moves);
+		return (count_possible_moves > 0 )? true : false;
+		
+	}
 } // end Board class
