@@ -52,11 +52,17 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 		}
 	}
 	public Move getMove(Board board) {
+		Integer col; // to column the column for the move;
 		
 		// Based on who is on the board,  add to list of opponent
 		addOpponent(board);
 		
-		// smart computer blocks a winning move
+		// Top priority: smart computer detects a winning move
+		col = detectWinningMove( board, this);
+		if ( col != null ){
+			return ( new Move(col, this));
+		}
+		// Second priority: smart computer blocks a winning move
 		/*
 		 * Iterate over over opponents, 
 		 * check for any winning moves
@@ -64,14 +70,26 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 		 */
 		for(Player p: opponents){
 			System.out.println("Looking for win for opponent "+ p.getName() );
-			Integer col = blockWinningMove( board, p);
+			col = detectWinningMove( board, p);
 			if ( col != null ){
 				return ( new Move(col, this));
 			}
 		}
+        
 		
 		// the stupid computer just chooses randomly.
-		return (new Move(randGen.nextInt(board.getCols()), this));
+		// the smart computer favors the center position when all else is equal.
+		/*
+		 * Need a random number weighted for the center
+		 * 
+		 */
+		col = getWeightedRandomColumn( board );
+		return (new Move(col, this));
+	}
+	private Integer getWeightedRandomColumn(Board board) {
+		Integer col;
+		col = randGen.nextInt(board.getCols());
+		return col;
 	}
 	/*
 	 * Your player should always block if the other player has three in a row.
@@ -89,7 +107,7 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	 * - Return the column to block a win
 	 * - OR return null
 	 */
-	public Integer blockWinningMove(Board board, Player opponent ){
+	public Integer detectWinningMove(Board board, Player opponent ){
 	      /*
 	       *   Using a fake board, try every column, as the opponent
 	       *   If any result in a winner, return that move.
@@ -112,19 +130,16 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	    	    */
 	    	   Player p = fakeBoard.winner(move);
 	    	   /*
-	    	    * If so, block it.
+	    	    * If so, take it.
 	    	    */
 	    	   if (  p != null ){
-	    		   System.out.println("-->Block this move");
+	    		   System.out.println("-->Take this move");
 	    		   return new Integer(col);
 	    	   }
 	       }
 	       return  null; // Return null if no winning move found.	
 	}
-	
-	/*
-	 * Your player should have a preference for the center position when all else is equal.
-	 */
+
 
 	/* 
 	 * Your player should do one other “smart” thing; you’ll explain what you did in your write-up.
