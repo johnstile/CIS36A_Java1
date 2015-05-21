@@ -156,6 +156,7 @@ public class Connect4 extends JPanel implements MouseListener{
     		 *  Search each column for possible move. 
     		 *  Returns true if any column has a possible move 
     		 */
+    		System.out.println("Computer Player");
     		if (! moreMovesPossible()){
     			takeTurn( new QuitMove(getCurrentPlayer(), getCurrentPlayer().getName() +  " quit the game.  No moves possible") );
     			this.noWinner = false;

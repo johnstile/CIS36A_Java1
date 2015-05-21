@@ -32,16 +32,16 @@ public class Board {
 
 	}
 	/*
-	 * This constructor is used to make a copy of another board
+	 * Copy Constructor
 	 */
 	public Board( Board b ){
 		this.rows = b.getRows();
 		this.cols = b.getCols();
-		grid = b.grid;
+		grid = new Player[this.rows][this.cols];
 		// Deep copy of 2d array
 		for ( int c = 0; c < b.getCols(); c++ ){
 			for (int r = 0; r < b.getRows(); r++){
-				grid[r][c] = b.grid[r][c];
+				grid[r][c] = b.getCell(r, c);
 			} 
 		}
 	}
@@ -133,7 +133,6 @@ public class Board {
 	 */
 	public Player winner(Move lastMove) {
 		// TODO: write this. Currently, there is never a winner.
-		
 		
 		/* Plan:
 		 * A winner exists if there are:

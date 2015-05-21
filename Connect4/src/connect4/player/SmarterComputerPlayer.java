@@ -12,7 +12,9 @@ import java.util.Random;
  */
 
 public class SmarterComputerPlayer extends ComputerPlayer {
-	// keep track of opponents
+	/*
+	 * A smart player keeps track of their opponents
+	 */
 	ArrayList<Player> opponents = new ArrayList<Player>();
 	
 	public SmarterComputerPlayer(String name, Color color) {
@@ -40,9 +42,8 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 						/*
 						 * Only add an opponent if we haven't seen them before.
 						 */
-						if ( opponents.contains(p) ){
-						    System.out.println("Already have opponent");
-					    } else {
+						if ( ! opponents.contains(p) ){
+							System.out.println("Add opponnent: " + p.getName() );
 					    	opponents.add(p);
 					    }
 					}
@@ -62,25 +63,31 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 		 * if so, return that move.
 		 */
 		for(Player p: opponents){
-			System.out.println("Opponent");
+			System.out.println("Looking for win for opponent "+ p.getName() );
 			Integer col = blockWinningMove( board, p);
-			if ( col == null ){
+			if ( col != null ){
 				return ( new Move(col, this));
 			}
-		}		
+		}
+		
 		// the stupid computer just chooses randomly.
 		return (new Move(randGen.nextInt(board.getCols()), this));
 	}
 	/*
 	 * Your player should always block if the other player has three in a row.
+	 * 
 	 * Your player shouldn't be fooled when the other player has two pieces in a row with
 	 * two open spaces on either end.
 	 * 
-	 * Takes a board which we will analyze
-	 * Takes the Player which is the opponent
+	 * Strategy to code:
+	 *     Board::winner already exists and it is complex
+	 *     Make a fake board, and try the 7 possible moves.
+	 *     If one results in a winner, return that column as our next move.
 	 * 
-	 * Returns the column to add a piece in order to block
-	 * 
+	 * - Takes a board which we will analyze
+	 * - Takes the Player which is the opponent
+	 * - Return the column to block a win
+	 * - OR return null
 	 */
 	public Integer blockWinningMove(Board board, Player opponent ){
 	      /*
@@ -88,20 +95,29 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	       *   If any result in a winner, return that move.
 	       */
 	       for (int col=0 ; col <  board.getCols(); col++){
-	           Board fakeBoard = new Board( board);
-	           Move move = new Move( col, opponent );
-	           // is the move legal
-	           if ( fakeBoard.possibleMove(move)){
-	        	   // add piece
-	        	   fakeBoard.addPiece(move);
-	        	   // check if a winner
-	        	   Player p = fakeBoard.winner(move);
-	        	   if (p !=null){
-	        		   // Found a winning move.
-	        		   // We must block it!
-	        	       return col;
-	        	   }
-	           }
+	    	   /*
+	    	    * Fake board must be a perfect copy of real board
+	    	    */
+	    	   Board fakeBoard = new Board( board);
+	           /*
+	            * Move consists of a column and Player
+	            */
+	    	   Move move = new Move( col, opponent );
+	    	   /*
+	    	    * Add piece to fake board
+	    	    */
+	    	   fakeBoard.addPiece(move);
+	    	   /*
+	    	    * Look for a winner.
+	    	    */
+	    	   Player p = fakeBoard.winner(move);
+	    	   /*
+	    	    * If so, block it.
+	    	    */
+	    	   if (  p != null ){
+	    		   System.out.println("-->Block this move");
+	    		   return new Integer(col);
+	    	   }
 	       }
 	       return  null; // Return null if no winning move found.	
 	}
