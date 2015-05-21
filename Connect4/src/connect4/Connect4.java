@@ -6,6 +6,7 @@ import connect4.move.Move;
 import connect4.move.QuitMove;
 import connect4.player.Player;
 import connect4.player.ComputerPlayer;
+import connect4.player.SmarterComputerPlayer;
 import connect4.player.StupidComputerPlayer;
 
 import java.awt.*;
@@ -123,7 +124,8 @@ public class Connect4 extends JPanel implements MouseListener{
         myBoard.reset();
         players = new ArrayList<Player>();
         Player p1 = new Player("Jane", Color.black);
-        StupidComputerPlayer p2 = new StupidComputerPlayer("Robot Joe", Color.red);
+        //StupidComputerPlayer p2 = new StupidComputerPlayer("Robot Joe", Color.red);
+        SmarterComputerPlayer p2 = new SmarterComputerPlayer("Robot Joe", Color.red);
         players.add(p1);
         players.add(p2);
         
@@ -201,6 +203,12 @@ public class Connect4 extends JPanel implements MouseListener{
         play();
     }
     private void takeTurn(QuitMove move ) {
+    	Player p = myBoard.getWinner();
+    	if ( p != null ){
+    		message += "You can't quit.  " + p + " already one!";
+    		repaint();
+    		return;
+    	}
     	// quit();
     	this.noWinner = false;
     	this.message = move.getMessage();

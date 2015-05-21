@@ -40,8 +40,10 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 						/*
 						 * Only add an opponent if we haven't seen them before.
 						 */
-					    if ( ! opponents.contains(p) ){
-						    opponents.add(p);
+						if ( opponents.contains(p) ){
+						    System.out.println("Already have opponent");
+					    } else {
+					    	opponents.add(p);
 					    }
 					}
 				}
@@ -60,9 +62,10 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 		 * if so, return that move.
 		 */
 		for(Player p: opponents){
-			Integer column = blockWinningMove( board, p);
-			if ( column != null ){
-				return ( new Move(column, this));
+			System.out.println("Opponent");
+			Integer col = blockWinningMove( board, p);
+			if ( col == null ){
+				return ( new Move(col, this));
 			}
 		}		
 		// the stupid computer just chooses randomly.
@@ -84,9 +87,9 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	       *   Using a fake board, try every column, as the opponent
 	       *   If any result in a winner, return that move.
 	       */
-	       for (int column=0 ; column <  board.getCols(); column++){
+	       for (int col=0 ; col <  board.getCols(); col++){
 	           Board fakeBoard = new Board( board);
-	           Move move = new Move( column, opponent );
+	           Move move = new Move( col, opponent );
 	           // is the move legal
 	           if ( fakeBoard.possibleMove(move)){
 	        	   // add piece
@@ -96,7 +99,7 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	        	   if (p !=null){
 	        		   // Found a winning move.
 	        		   // We must block it!
-	        	       return column;
+	        	       return col;
 	        	   }
 	           }
 	       }

@@ -31,6 +31,20 @@ public class Board {
 		reset();
 
 	}
+	/*
+	 * This constructor is used to make a copy of another board
+	 */
+	public Board( Board b ){
+		this.rows = b.getRows();
+		this.cols = b.getCols();
+		grid = b.grid;
+		// Deep copy of 2d array
+		for ( int c = 0; c < b.getCols(); c++ ){
+			for (int r = 0; r < b.getRows(); r++){
+				grid[r][c] = b.grid[r][c];
+			} 
+		}
+	}
 
 	public void reset() {
 		for (int r = 0; r < rows; r++) {
