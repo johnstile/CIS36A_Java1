@@ -105,8 +105,10 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	 *      This is just shifted
 	 *  
 	 */
-	private Integer getWeightedRandomColumn(Board board) {
+	private int getWeightedRandomColumn(Board board) {
 
+      // First attempt at center bias
+	    // Kind-of makes a Gaussian but may be too center biased
 		double half = board.getCols()/2;   // find the center
 		double percentage =  randGen.nextInt( 100 ) / 100.0;   // used to get 0% or 100% of the half
 		double smaller_range =   ( half * percentage > 1 )?  half * percentage : 1;   // makes a smaller limit
@@ -115,7 +117,12 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 		int sign = (right_or_left > 0)? 1:-1;   // step in a direction
 		Integer col = (int) half + (sign*offset);  // put it all together		
 		return col;
-	
+		
+//		double half = board.getCols()/2;   // find the center
+//		// REF: http://www.javamex.com/tutorials/random_numbers/gaussian_distribution_2.shtml		
+//		int step_from_center =  (int) Math.round(randGen.nextGaussian() *  board.getCols() );
+//	
+//		return (int) (step_from_center + half);
 	}
 	
 	

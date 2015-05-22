@@ -176,20 +176,17 @@ public class Connect4 extends JPanel implements MouseListener{
         message = getCurrentPlayer().getName() + " goes in column " + move.getColumn() + ".  ";
         
     	// position of move
-    	int c = move.getColumn();
-    	int r =  move.getRow();
-        System.out.println("Droped bomb at col:" + c + ", row:" + r );
+    	int column_move = move.getColumn();
+    	int row_move =  move.getRow();
+        System.out.println("Droped bomb at col:" + column_move + ", row:" + row_move );
         
         // Iterate over all neighbors
-        for ( int i = (c - 1);  i <= c + 1; i++){
-        	for ( int j = (r -1); j <= r +1 ; j++ ){
+        for ( int column_position = (column_move - 1);  column_position <= column_move + 1; column_position++){
+        	for ( int row_position = (row_move -1); row_position <= row_move +1 ; row_position++ ){
                 // If they are valid board positions, nullify
-        		if ( myBoard.inBounds(j, i) ){
-	        	    	//System.out.println("Null grid["+ j + "][" + i + "]");
-	        	    	myBoard.grid[j][i] = null;	        	   
-        		} else {
-        			//System.out.println("Skip grid["+ j + "][" + i + "]");
-        		}
+        		if ( myBoard.inBounds(row_position, column_position) ){
+	        	    	myBoard.grid[row_position][column_position] = null;	        	   
+        		} 
         	}
         }
     	/*
@@ -197,21 +194,26 @@ public class Connect4 extends JPanel implements MouseListener{
     	 * Shift pieces down, 
     	 *  move nulls to the top
     	 */
-        for ( int col = (c - 1);  col <= c + 1; col++){
-        	/*
-        	 * convert column into 1d array, 
-        	 * run through bubble sort
-        	 * assign back to the column
-        	 */
-        	Player[] row_ar = new Player [myBoard.getRows()];
-        	for ( int row = 0 ; row < myBoard.getRows(); row++ ){
-                row_ar[row] = myBoard.getCell(row, col);
-        	}
-        	System.out.println("Bubble sort col:" + col);
-        	row_ar = bubble(row_ar );
-        	for ( int row = 0 ; row < myBoard.getRows(); row++ ){
-                myBoard.grid[row][col] = row_ar[row] ;
-        	}
+        for ( int col = (column_move - 1);  col <= column_move + 1; col++){
+            // start from bottom, find first null, swap it with first non-null in same column
+            int lowestNull = -1;
+            for (int row = 0; row < myBoard.getRows(); ++row) {
+              // are we looking for nulls or swapping?
+              if (lowestNull == -1) {
+                if (myBoard.getCell(row, col) == null) {
+                  lowestNull = row;   // found the lowest null; now we can start swapping
+                }
+                continue; // we can't start swapping until we find lowest null
+              }
+              // if the current cell is non-empty swap with lowestNull and move lowestNull null up
+              Player swapPlayer = myBoard.getCell(row, col);
+              if (swapPlayer != null) {
+                // swap this move with the lowest null and move it up
+                myBoard.grid[lowestNull][col] = swapPlayer;
+                myBoard.grid[row][col] = null;
+                ++lowestNull;
+              }
+            }
         }
         System.out.println("bbbbbbbbbb");
     	/*
@@ -222,16 +224,7 @@ public class Connect4 extends JPanel implements MouseListener{
         repaint();
         play();
     }
-    private Player[]  bubble( Player[] myArray ){
-        for ( int i=0; i< myBoard.getRows()  ; i++){
-        	if (  (myArray[i] == null ) &&  (i+1 <  myBoard.getRows())   &&  ( myArray[i+1] != null ) ){
-        		myArray[i] = myArray[i+1];
-        		myArray[i+1] = null;
-        		return myArray ;
-        	}
-        }
-        return myArray;
-    }
+
     private void takeTurn(QuitMove move ) {
     	Player p = myBoard.getWinner();
     	if ( p != null ){
