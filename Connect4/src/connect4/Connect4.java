@@ -171,8 +171,7 @@ public class Connect4 extends JPanel implements MouseListener{
     }
 
     private void takeTurn(BombMove move){
-    	
-    	
+ 
         myBoard.addPiece(move);
         message = getCurrentPlayer().getName() + " goes in column " + move.getColumn() + ".  ";
         
@@ -193,8 +192,28 @@ public class Connect4 extends JPanel implements MouseListener{
         		}
         	}
         }
-    	System.out.println("bbbbbbbbbb");
-    	
+    	/*
+    	 * Sort columns.
+    	 * Shift pieces down, 
+    	 *  move nulls to the top
+    	 */
+        for ( int col = (c - 1);  col <= c + 1; col++){
+        	/*
+        	 * convert column into 1d array, 
+        	 * run through bubble sort
+        	 * assign back to the column
+        	 */
+        	Player[] row_ar = new Player [myBoard.getRows()];
+        	for ( int row = 0 ; row < myBoard.getRows(); row++ ){
+                row_ar[row] = myBoard.getCell(row, col);
+        	}
+        	System.out.println("Bubble sort col:" + col);
+        	row_ar = bubble(row_ar );
+        	for ( int row = 0 ; row < myBoard.getRows(); row++ ){
+                myBoard.grid[row][col] = row_ar[row] ;
+        	}
+        }
+        System.out.println("bbbbbbbbbb");
     	/*
     	 * Swap players
     	 */
@@ -202,6 +221,16 @@ public class Connect4 extends JPanel implements MouseListener{
         message += "It is now " + getCurrentPlayer().getName() + "'s turn.  ";
         repaint();
         play();
+    }
+    private Player[]  bubble( Player[] myArray ){
+        for ( int i=0; i< myBoard.getRows()  ; i++){
+        	if (  (myArray[i] == null ) &&  (i+1 <  myBoard.getRows())   &&  ( myArray[i+1] != null ) ){
+        		myArray[i] = myArray[i+1];
+        		myArray[i+1] = null;
+        		return myArray ;
+        	}
+        }
+        return myArray;
     }
     private void takeTurn(QuitMove move ) {
     	Player p = myBoard.getWinner();

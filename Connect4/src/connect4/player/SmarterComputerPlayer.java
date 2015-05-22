@@ -78,19 +78,47 @@ public class SmarterComputerPlayer extends ComputerPlayer {
         
 		
 		// the stupid computer just chooses randomly.
-		// the smart computer favors the center position when all else is equal.
+		// the smart computer favors the center position 
+		// when all else is equal.
 		/*
 		 * Need a random number weighted for the center
-		 * 
+		 * I personally don't like this strategy
 		 */
-		col = getWeightedRandomColumn( board );
+		Move m = null;
+		while ( m == null ){
+		    col = getWeightedRandomColumn( board );
+		    if (board.possibleMove(new Move(col,this) ) ){
+		    	 m=new Move(col,this);
+		    }
+		}
 		return (new Move(col, this));
 	}
+	/*
+	 * I am calling the middle a zero of offset zero, and edge offset of width/2
+	 * Worst case, I need to pick the edge distance
+	 * Best case, I pick the middle.
+	 * So I need to weight my choice toward a smaller offest
+	 * One method:
+	 *    picking a random reduction in edge, from 0 to edge (call it sub_edge) 
+	 *      Reduces range favoring zero
+	 *    picking a random offset from 0 to sub_edge
+	 *      This is just shifted
+	 *  
+	 */
 	private Integer getWeightedRandomColumn(Board board) {
-		Integer col;
-		col = randGen.nextInt(board.getCols());
+
+		double half = board.getCols()/2;   // find the center
+		double percentage =  randGen.nextInt( 100 ) / 100.0;   // used to get 0% or 100% of the half
+		double smaller_range =   ( half * percentage > 1 )?  half * percentage : 1;   // makes a smaller limit
+		int offset =  randGen.nextInt( (int) smaller_range );   // pick random from smaller distance from middle
+		int right_or_left = randGen.nextInt(2);    // there are two ways to go
+		int sign = (right_or_left > 0)? 1:-1;   // step in a direction
+		Integer col = (int) half + (sign*offset);  // put it all together		
 		return col;
+	
 	}
+	
+	
 	/*
 	 * Your player should always block if the other player has three in a row.
 	 * 
