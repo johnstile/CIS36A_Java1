@@ -36,7 +36,7 @@ public class Player {
 	// this method will generate an error -- an exception! -- if there are no
 	// bombs.
 	public void useBomb() throws Exception {
-		if (numBombs == 0) {
+		if (numBombs <= 0) {
 			throw new Exception("Player " + name
 					+ " doesn't have any bombs to use!");
 		} else {

@@ -316,7 +316,12 @@ public class Connect4 extends JPanel implements MouseListener{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-        		    takeTurn( new BombMove(c, getCurrentPlayer()) );
+        		    try {
+						takeTurn( new BombMove(c, getCurrentPlayer()) );
+					} catch (Exception e1) {
+						System.out.println(e1);
+						new Move(c, getCurrentPlayer());
+					}
         		} else {
         			System.out.println("No Bomb For You! Loose a turn!");
         		}

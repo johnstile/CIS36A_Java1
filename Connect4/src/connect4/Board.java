@@ -120,7 +120,7 @@ public class Board {
 		    		break;
 		    	}
 		    }
-		    System.out.println("Add to column:" + c + ", row:" +  i + " for Player:" + p );
+		    //System.out.println("Add to column:" + c + ", row:" +  i + " for Player:" + p );
 		    grid[i][c] = p;
 		    // Store position of last move
 		    move.setRow(i);
