@@ -111,16 +111,11 @@ public class SmarterComputerPlayer extends ComputerPlayer {
 	 *   roll a 6 sider, and bomb if 3 or greater
 	 */
 	private Move toBombOrNotToBomb(int col) throws Exception{
-		Move move;
-		int type_of_move;   
-		type_of_move = (this.hasBomb())? randGen.nextInt(5) : 0;
-	    if ( type_of_move >= 3 ){
-	    	System.out.println("Drop a bomb!!!!");
-	    	move = new BombMove(col, this);
-	    } else {
-		    move =  new Move(col, this);
-	    }
-	    return move;
+        boolean useBomb = randGen.nextInt() % 6 == 0; // 1 in 6 random numbers is evenly divisible by 6
+        if (hasBomb()&& useBomb) {
+            return new BombMove(col, this);
+        }
+        return new Move(col, this);
 	}
 	/*
 	 * I am calling the middle a zero of offset zero, and edge offset of width/2
