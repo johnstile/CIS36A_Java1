@@ -1,2 +1,2 @@
-# CIS36A_Java1
-CIS36A - Java1
+# Java class 2015
+Introduction to Java
